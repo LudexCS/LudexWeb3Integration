@@ -1,0 +1,28 @@
+{
+  "name": "ludexweb3integration",
+  "version": "1.0.0",
+  "description": "A library with adapter types which abstracts the Web3 integration from web side to smart contract side.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LudexCS/LudexWeb3Integration.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LudexCS/LudexWeb3Integration/issues"
+  },
+  "homepage": "https://github.com/LudexCS/LudexWeb3Integration#readme",
+  "devDependencies": {
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.8.3",
+    "webpack": "^5.99.5",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "@webpack-cli/generators": "^3.0.7"
+  }
+}
