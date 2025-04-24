@@ -1,6 +1,7 @@
 import { ethers, MaxUint256, Signer } from 'ethers';
 import { Adapter, MetaTXAdapterComponent, AdminAdapterComponent } from './adapter';
-import { LudexContract } from 'ludex-contracts';
+import { abi as StoreABI } from 'contracts/abi/Store.json';
+import { abi as ERC20PermitABI } from 'contracts/abi/ERC20Permit.json';
 import { Address } from '../address'; 
 import { RelayRequest } from '../relay-request';
 import { EIP712 } from '../utils/eip712';
@@ -23,7 +24,7 @@ export class MetaTXAdapterStore
    ){
       super(
          Address.create(config.storeAddress),
-         LudexContract.ABI.Store,
+         StoreABI,
          component);
    }
 
@@ -32,8 +33,7 @@ export class MetaTXAdapterStore
    : Promise<RelayRequest<bigint>>
    {
       let tokenAddress = token.stringValue;
-      let tokenContract = 
-         new ethers.Contract(tokenAddress, LudexContract.ABI.ERC20Permit);
+      let tokenContract = new ethers.Contract(tokenAddress, ERC20PermitABI);
       let domain:EIP712.Domain = await EIP712.getDomainOfContract(tokenContract);
       
       let userAddress = await this.component.runner.getAddress();

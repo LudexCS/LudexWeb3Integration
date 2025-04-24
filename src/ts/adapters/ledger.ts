@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
-import { LudexContract } from "ludex-contracts";
+import { abi as LedgerABI } from "contracts/abi/Ledger.json";
+import { abi as ERC721ABI } from "contracts/abi/ERC721.json";
 import { Adapter, AdapterComponent, MetaTXAdapterComponent, AdminAdapterComponent } from "./adapter";
 import { Address } from "../address";
 import { Purchase } from "../contract-defined-types";
@@ -45,12 +46,12 @@ export class ReadonlyAdapterLedger<
     ){
         super(
             Address.create(config.ledgerAddress),
-            LudexContract.ABI.Ledger,
+            LedgerABI,
             component);
         this.nftContract = (
             new ethers.Contract(
                 this.contractAddress.stringValue, 
-                LudexContract.ABI.ERC721, 
+                ERC721ABI, 
                 component.runner));
     }
 

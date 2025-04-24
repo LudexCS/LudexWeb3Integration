@@ -9,7 +9,7 @@ import { BrowserWalletConnection } from "./browser-wallet-connection";
 import { IStoreMetaTXAccess, MetaTXAdapterStore } from "./adapters/store";
 import { Web3Error } from "./error";
 import { Address } from "./address";
-import { LudexContract } from "ludex-contracts"
+import { abi as ERC2771ForwarderABI } from "contracts/abi/ERC2771Forwarder.json";
 
 export interface IReadonlyFacade
 {
@@ -226,7 +226,7 @@ export function createWeb3UserFacade(
             signer, 
             new ethers.Contract(
                 forwarderAddress.stringValue, 
-                LudexContract.ABI.ERC2771Forwarder,
+                ERC2771ForwarderABI,
                 signer));
     return new Web3UserFacade(chainConfig, ludexConfig, signer, component);
 }
