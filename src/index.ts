@@ -38,19 +38,27 @@ import * as facade from "./ts/facades";
 
 export namespace Ludex {
 
-    export const IntegrationConfig = integrationConfig;
+    export namespace Config {
+        export type ChainConfig = integrationConfig.ChainConfig;
+        export type LudexConfig = integrationConfig.LudexConfig;
+    }
 
-    export const Error = { EthereumError, Web3Error };
+    export namespace Error {
+        export type Web3 = Web3Error;
+        export type Ethereum = EthereumError;
+    }
 
     export type Address = AddressType;
 
-    export const Structs = structs;
+    export type Purchase = structs.Purchase;
+    
+    export type PriceInfo = structs.PriceInfo;
 
     export type Connection = connection;
 
-    export const EIP712 = EIP712Util;
+    export import EIP712 = EIP712Util;
 
-    export const ERC2771 = ERC2771Util;
+    export import ERC2771 = ERC2771Util;
 
     export namespace Relay {
         export type Request<T> = RelayRequest<T>;
@@ -88,6 +96,5 @@ export namespace Ludex {
         }
     };
     
-    export const Facade = facade;
-
+    export import Facade = facade;
 }
