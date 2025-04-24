@@ -5,8 +5,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "typesVersions": {
-    "*":{
-      "*": ["dist/index.d.ts"]
+    "*": {
+      "*": [
+        "dist/index.d.ts"
+      ]
     }
   },
   "scripts": {
@@ -28,7 +30,7 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "ludex-contracts": "git+https://github.com/LudexCS/LudexSmartContracts.git",
-    "ethers": "^6.13.5"
+    "ethers": "^6.13.5",
+    "ludex-contracts": "github:LudexCS/LudexSmartContracts"
   }
 }
