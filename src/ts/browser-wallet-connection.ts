@@ -1,6 +1,5 @@
 import { Address } from './address';
 import { ethers } from 'ethers';
-import { abi as ERC2771ForwarderABI } from 'contracts/abi/ERC2771Forwarder.json';
 import { EthereumError, Web3Error } from './error';
 import { ChainConfig } from './configs';
 
