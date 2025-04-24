@@ -1,6 +1,6 @@
-import * as integrationConfig from "./ts/configs"
+import * as configs from "./ts/configs"
 
-export { integrationConfig };
+export { configs };
 
 
 import { EthereumError, Web3Error } from "./ts/error";
