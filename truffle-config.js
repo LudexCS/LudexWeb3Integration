@@ -1,6 +1,6 @@
 module.exports = {
     contracts_directory: "./node_modules/ludex-contracts/contracts",
-    contracts_build_directory: "./node_modules/ludex/contracts",
+    contracts_build_directory: "./contracts",
     networks: { 
         development: {
             host: "localhost",
