@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { Address } from "./address";
-import { abi as ERC2771ForwarderABI } from "contracts/abi/ERC2771Forwarder.json";
+import { LudexContract } from "ludex-contracts";
 import { RelayRequest } from "./relay-request";
 import { EIP712 } from "./utils/eip712";
 import { ERC2771 } from "./utils/erc2771";
@@ -16,7 +16,7 @@ export class RelayCommand
         this.forwarder = 
             new ethers.Contract(
                 forwarderAddress.stringValue, 
-                ERC2771ForwarderABI, 
+                LudexContract.ABI.ERC2771Forwarder,
                 wallet);
         this.wallet = wallet;
     }

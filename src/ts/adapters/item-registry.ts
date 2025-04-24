@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { Adapter, AdapterComponent, MetaTXAdapterComponent, AdminAdapterComponent, ServiceAdapterComponent } from "./adapter";
-import { abi as ItemRegistryABI } from "contracts/abi/ItemRegistry.json";
+import { LudexContract } from "ludex-contracts";
 import { Address } from "../address";
 import { LudexConfig } from "../configs";
 
@@ -53,7 +53,7 @@ export class ReadonlyAdapterItemRegistry<
     ){
         super(
             Address.create(config.itemRegistryAddress),
-            ItemRegistryABI,
+            LudexContract.ABI.ItemRegistry,
             component);
     }
     

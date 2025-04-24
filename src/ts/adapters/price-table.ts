@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { abi as PriceTableABI } from "contracts/abi/PriceTable.json";
+import { LudexContract } from "ludex-contracts";
 import { Adapter, AdapterComponent, AdminAdapterComponent, MetaTXAdapterComponent } from "./adapter";
 import { Address } from "../address";
 import { RelayRequest } from "../relay-request";
@@ -51,7 +51,7 @@ export class ReadonlyAdapterPriceTable<
     {
         super(
             Address.create(config.priceTableAddress),
-            PriceTableABI, 
+            LudexContract.ABI.PriceTable, 
             component);
     }
 

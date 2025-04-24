@@ -1,13 +1,48 @@
 import * as integrationConfig from "./ts/configs"
+
+export { integrationConfig };
+
+
 import { EthereumError, Web3Error } from "./ts/error";
-import { Address as AddressType } from "./ts/address";
+
+export { EthereumError, Web3Error };
+
+
+import { Address } from "./ts/address";
+
+export { Address };
+
+
 import * as structs from "./ts/contract-defined-types";
-import { BrowserWalletConnection as connection } 
-    from "./ts/browser-wallet-connection";
-import { EIP712 as EIP712Util } from "./ts/utils/eip712";
-import { ERC2771 as ERC2771Util } from "./ts/utils/erc2771";
+
+export { structs };
+
+
+import { BrowserWalletConnection } from "./ts/browser-wallet-connection";
+
+export { BrowserWalletConnection };
+
+
+import { EIP712 } from "./ts/utils/eip712";
+
+export { EIP712 };
+
+
+import { ERC2771 } from "./ts/utils/erc2771";
+
+export { ERC2771 };
+
+
 import { RelayRequest } from "./ts/relay-request";
+
+export { RelayRequest };
+
+
 import { RelayCommand } from "./ts/relay";
+
+export { RelayCommand };
+
+
 import { IStoreMetaTXAccess } from "./ts/adapters/store";
 import { 
     ILedgerReadonlyAccess,
@@ -34,67 +69,37 @@ import {
     ISellerRegistryServiceAccess
 } from "./ts/adapters/seller-registry";
 
+export namespace Access {
+    export namespace Readonly {
+        export type ILedger = ILedgerReadonlyAccess;
+        export type IPriceTable = IPriceTableReadOnlyAccess;
+        export type ISellerRegistry = ISellerRegistryReadonlyAccess;
+        export type IItemRegistry = IItemRegistryReadonlyAccess;
+    }
+
+    export namespace MetaTX {
+        export type IStore = IStoreMetaTXAccess;
+        export type ILedger = ILedgerMetaTXAccess;
+        export type IPriceTable = IPriceTableMetaTXAccess;
+        export type ISellerRegistry = ISellerRegistryMetaTXAccess;
+        export type IItemRegistry = IItemRegistryMetaTXAccess;
+    }
+
+    export namespace Admin {
+        export type ILedger = ILedgerAdminAccess;
+        export type IPriceTable = IPriceTableAdminAccess;
+        export type ISellerRegistry = ISellerRegistryAdminAccess;
+        export type IItemRegistry = IItemRegistryAdminAccess;
+    }
+
+    export namespace Service {
+        export type ILedger = ILedgerServiceAccess;
+        export type IPriceTable = IPriceTableServiceAccess;
+        export type ISellerRegistry = ISellerRegistryServiceAccess;
+        export type IItemRegistry = IItemRegistryServiceAccess;
+    }
+};
+
 import * as facade from "./ts/facades";
 
-export namespace Ludex {
-
-    export namespace Config {
-        export type ChainConfig = integrationConfig.ChainConfig;
-        export type LudexConfig = integrationConfig.LudexConfig;
-    }
-
-    export namespace Error {
-        export type Web3 = Web3Error;
-        export type Ethereum = EthereumError;
-    }
-
-    export type Address = AddressType;
-
-    export type Purchase = structs.Purchase;
-    
-    export type PriceInfo = structs.PriceInfo;
-
-    export type Connection = connection;
-
-    export import EIP712 = EIP712Util;
-
-    export import ERC2771 = ERC2771Util;
-
-    export namespace Relay {
-        export type Request<T> = RelayRequest<T>;
-        export type Command = RelayCommand;
-    }
-
-    export namespace Access {
-        export namespace Readonly {
-            export type ILedger = ILedgerReadonlyAccess;
-            export type IPriceTable = IPriceTableReadOnlyAccess;
-            export type ISellerRegistry = ISellerRegistryReadonlyAccess;
-            export type IItemRegistry = IItemRegistryReadonlyAccess;
-        }
-
-        export namespace MetaTX {
-            export type IStore = IStoreMetaTXAccess;
-            export type ILedger = ILedgerMetaTXAccess;
-            export type IPriceTable = IPriceTableMetaTXAccess;
-            export type ISellerRegistry = ISellerRegistryMetaTXAccess;
-            export type IItemRegistry = IItemRegistryMetaTXAccess;
-        }
-
-        export namespace Admin {
-            export type ILedger = ILedgerAdminAccess;
-            export type IPriceTable = IPriceTableAdminAccess;
-            export type ISellerRegistry = ISellerRegistryAdminAccess;
-            export type IItemRegistry = IItemRegistryAdminAccess;
-        }
-
-        export namespace Service {
-            export type ILedger = ILedgerServiceAccess;
-            export type IPriceTable = IPriceTableServiceAccess;
-            export type ISellerRegistry = ISellerRegistryServiceAccess;
-            export type IItemRegistry = IItemRegistryServiceAccess;
-        }
-    };
-    
-    export import Facade = facade;
-}
+export { facade };
