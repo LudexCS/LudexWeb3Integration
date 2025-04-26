@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { Address } from "../address";
 import { LudexContract } from "ludex-contracts";
-import { RelayRequest } from "../relay-request";
+import { RelayRequest } from "../relayer/relay-request";
 import { Adapter, AdapterComponent, MetaTXAdapterComponent } from "./adapter";
 import { LudexConfig } from "../configs";
 
@@ -88,7 +88,7 @@ export class MetaTXAdapterSellerRegistry
     public async registerSellerRequest (paymentChannels: Array<Address>)
     : Promise<RelayRequest<boolean>>
     {
-        let getValueFunction = (log: ethers.Log): boolean => {
+        let onResponseFunctionFunction = (log: ethers.Log): boolean => {
             return (
                 this.contract.interface.parseLog(log)?.args.isSuccess as boolean);
         };
@@ -100,7 +100,7 @@ export class MetaTXAdapterSellerRegistry
                 "registerSeller", 
                 [paymentChannels.map(address => address.stringValue)],
                 "RegisteredSeller",
-                getValueFunction));
+                onResponseFunctionFunction));
     }
 
     public async addPaymentChannelsRequest(

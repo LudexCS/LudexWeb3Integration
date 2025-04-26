@@ -2,7 +2,7 @@ import { ethers, MaxUint256, Signer } from 'ethers';
 import { Adapter, MetaTXAdapterComponent, AdminAdapterComponent } from './adapter';
 import { LudexContract } from 'ludex-contracts';
 import { Address } from '../address'; 
-import { RelayRequest } from '../relay-request';
+import { RelayRequest } from '../relayer/relay-request';
 import { EIP712 } from '../utils/eip712';
 import { LudexConfig } from '../configs';
 
@@ -63,9 +63,8 @@ export class MetaTXAdapterStore
 
       let { v, r, s } = ethers.Signature.from(signature);
 
-      let getValueFunction = (log: ethers.Log): bigint|null => {
-         return this.contract.interface.parseLog(log)?.args.tokenID as bigint;
-      };
+      let onResponseFunctionFunction = 
+         (itemID: bigint, buyer: string, tokenID: bigint) => tokenID;
 
       return await (
          this.component.createForwarderRequest(
@@ -73,7 +72,7 @@ export class MetaTXAdapterStore
             this.contract.interface,
             "purchaseItem", [itemID, token.stringValue, v, r, s],
             "PurchasedItem",
-            getValueFunction));
+            onResponseFunctionFunction));
    }
    
 }

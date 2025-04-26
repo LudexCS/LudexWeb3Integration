@@ -1,6 +1,6 @@
 import { ethers, Contract, Signer } from 'ethers';
 import { Address } from '../address';
-import { RelayRequest } from '../relay-request';
+import { RelayRequest } from '../relayer/relay-request';
 import { ERC2771 } from '../utils/erc2771';
 import { EIP712 } from '../utils/eip712';
 import { PriceInfo, Purchase } from '../contract-defined-types';
@@ -36,7 +36,7 @@ export class MetaTXAdapterComponent
       func: string,
       params: ReadonlyArray<any>,
       responseEvent: string,
-      getValueFunction: (log: ethers.Log) => T|null
+      onResponseFunctionFunction: (...args: any) => T
    ): Promise<RelayRequest<T>>
    {
       let forwarderDomain = await EIP712.getDomainOfContract(this.forwarder);
@@ -66,7 +66,7 @@ export class MetaTXAdapterComponent
          request: forwarderRequest,
          signature: signature,
          responseEvent: responseEvent,
-         getValue: getValueFunction
+         onResponse: onResponseFunctionFunction
       };
    }
 }

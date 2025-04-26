@@ -32,16 +32,9 @@ import { ERC2771 } from "./ts/utils/erc2771";
 
 export { ERC2771 };
 
+import * as relay from "./ts/relayer/relay";
 
-import { RelayRequest } from "./ts/relay-request";
-
-export { RelayRequest };
-
-
-import { RelayCommand } from "./ts/relay";
-
-export { RelayCommand };
-
+export { relay };
 
 import { IStoreMetaTXAccess } from "./ts/adapters/store";
 import { 

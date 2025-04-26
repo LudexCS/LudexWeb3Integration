@@ -1,5 +1,4 @@
 import { ethers } from "ethers";
-import { RelayRequest } from "../relay-request";
 import { EIP712 } from "./eip712";
 import { Address } from "../address";
 

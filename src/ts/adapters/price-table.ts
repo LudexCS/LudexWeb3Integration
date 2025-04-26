@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { LudexContract } from "ludex-contracts";
 import { Adapter, AdapterComponent, AdminAdapterComponent, MetaTXAdapterComponent } from "./adapter";
 import { Address } from "../address";
-import { RelayRequest } from "../relay-request";
+import { RelayRequest } from "../relayer/relay-request";
 import { PriceInfo } from "../contract-defined-types";
 import { LudexConfig } from "../configs";
 
@@ -85,11 +85,9 @@ export class MetaTXAdapterPriceTable
     public async changeItemPriceRequest(itemID: bigint, priceUsd: bigint)
     : Promise<RelayRequest<bigint>>
     {
-        let getValueFunction = (log: ethers.Log): bigint|null => {
-            return (
-                this.contract.interface
-                .parseLog(log)?.args.prevPriceUsd as bigint);
-        }
+        let onResponseFunctionFunction = 
+            (itemID: bigint, priceUsd: bigint, prevPriceUsd: bigint) => 
+                prevPriceUsd;
         
         return await (
             this.component.createForwarderRequest(
@@ -97,7 +95,7 @@ export class MetaTXAdapterPriceTable
                 this.contract.interface,
                 "changeItemPrice", [itemID, priceUsd],
                 "ChangedItemPrice",
-                getValueFunction
+                onResponseFunctionFunction
             ));
     }
 
