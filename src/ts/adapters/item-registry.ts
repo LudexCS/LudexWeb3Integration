@@ -126,15 +126,25 @@ export class AdminAdapterItemRegistry
 
     public async suspendItemSale (itemID: bigint)
     : Promise<Array<bigint>>
-    {
-        return await this.contract.suspendItemSale(itemID);
-    }
+    {return await this.callAndListen(
+        await this.contract.suspendItemSale(itemID),
+        "ItemSaleSuspended",
+        (item: bigint, suspension: bigint[]) => {
+            console.log(`Item sale suspended: ${item}`);
+            return suspension;
+        }
+    );}
 
     public async resumeItemSale (itemID: bigint)
     : Promise<Array<bigint>>
-    {
-        return await this.contract.resumeItemSale(itemID);
-    }
+    {return await this.callAndListen(
+        await this.contract.resumeItemSale(itemID),
+        "ItemSaleResumed",
+        (item: bigint, resume: bigint[]) => {
+            console.log(`Item sale resumed: ${item}`);
+            return resume;
+        }
+    );}
 }
 
 export class ServiceAdapterItemRegistry
@@ -151,7 +161,12 @@ export class ServiceAdapterItemRegistry
         seller: Address, 
         parents: Array<bigint>
     ): Promise<bigint>
-    {
-        return await this.contract.registerItem(itemName, seller.stringValue);
-    }
+    {return await this.callAndListen(
+        await this.contract.registerItem(itemName, seller.stringValue),
+        "ItemRegistered",
+        (itemName: string, seller: string, itemID: bigint) => {
+            console.log(`New item registered: ${itemName} by ${seller}`);
+            return itemID;
+        }
+    )}
 }

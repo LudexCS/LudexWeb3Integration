@@ -126,21 +126,35 @@ export class AdminAdapterPriceTable
 
     public async changeExchangeRate(token: Address, usdToToken: bigint)
     : Promise<bigint>
-    {
-        return await (
-            this.contract.changeExchangeRate(token.stringValue, usdToToken));
-    }
+    {return await this.callAndListen(
+        await this.contract.changeExchangeRate(token.stringValue, usdToToken),
+        "ExchangeRateChanged",
+        (token: string, usdToToken:bigint, prevExchangeRate: bigint) => {
+            console.log(
+                `New exchange rate: ${usdToToken} USD for a ${token}`);
+            return prevExchangeRate;
+        }
+    );}
 
     public async addPaymentChannel(token: Address, usdToToken: bigint)
     : Promise<void>
-    {
-        await this.contract.addPaymentChannel(token.stringValue, usdToToken);
-    }
+    {return await this.callAndListen(
+        await this.contract.addPaymentChannel(token.stringValue, usdToToken),
+        "PaymentChannelAdded",
+        (token: string, usdToToken: bigint) => {
+            console.log(
+                `New payment channel: ${usdToToken} USD for 1 ${token}`);
+        }
+    );}
 
     public async removePaymentChannel(token: Address)
     : Promise<boolean>
-    {
-        return await (
-            this.contract.removePaymentChannel(token.stringValue))   
-    }
+    {return await this.callAndListen(
+        await this.contract.removePaymentChannel(token.stringValue),
+        "PaymentChannelRemoved",
+        (token: string, isSuccess: boolean) => {
+            console.log(`Payment channel removed: ${token}`)
+            return isSuccess;
+        }
+    );}
 }
