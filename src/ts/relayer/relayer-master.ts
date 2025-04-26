@@ -117,7 +117,8 @@ export class RelayMaster
             await this.waitTX(tx);
 
             return new Promise<never>((_, reject) => 
-                setTimeout(() => reject(new EthereumError("No event happened"))));
+                setTimeout(() => reject(new EthereumError("No event happened")),
+                    this.eventTimeOutms));
         }
         catch (error)
         {
