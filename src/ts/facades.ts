@@ -207,11 +207,15 @@ export class ServiceFacade
 export function createWeb2UserFacade(
     chainConfig: ChainConfig, 
     ludexConfig: LudexConfig,
-    provider: ethers.JsonRpcProvider
+    provider?: ethers.JsonRpcProvider
 ): Web2UserFacade
 {
-    let component = new AdapterComponent<ethers.JsonRpcProvider>(provider);
-    return new Web2UserFacade(chainConfig, ludexConfig, provider, component);
+    let provider_ = 
+        (provider) 
+        ?   provider 
+        :   new ethers.JsonRpcProvider(chainConfig.rpcUrls[0]);
+    let component = new AdapterComponent<ethers.JsonRpcProvider>(provider_);
+    return new Web2UserFacade(chainConfig, ludexConfig, provider_, component);
 }
 
 export function createWeb3UserFacade(
