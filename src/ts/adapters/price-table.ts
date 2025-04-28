@@ -94,7 +94,7 @@ export class MetaTXAdapterPriceTable
                 this.contractAddress,
                 this.contract.interface,
                 "changeItemPrice", [itemID, priceUsd],
-                "ChangedItemPrice",
+                "ItemPriceChanged",
                 onResponseFunctionFunction
             ));
     }
@@ -110,7 +110,7 @@ export class MetaTXAdapterPriceTable
                 this.contractAddress,
                 this.contract.interface,
                 "startDiscount", [itemID, usdPrice, endTime.getTime() / 1000],
-                "StartedDiscount",
+                "DiscountStarted",
                 (_) => {}));
     }
 }

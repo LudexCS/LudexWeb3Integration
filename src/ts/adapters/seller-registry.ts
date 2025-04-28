@@ -99,7 +99,7 @@ export class MetaTXAdapterSellerRegistry
                 this.contract.interface,
                 "registerSeller", 
                 [paymentChannels.map(address => address.stringValue)],
-                "RegisteredSeller",
+                "SellerRegistered",
                 onResponseFunctionFunction));
     }
 
@@ -112,7 +112,7 @@ export class MetaTXAdapterSellerRegistry
             this.contract.interface,
             "addPaymentChannels",
             [paymentChannels.map(address => address.stringValue)],
-            "AddedPaymentChannels",
+            "PaymentChannelsAdded",
             (_) => {}));
     }
 
@@ -125,7 +125,7 @@ export class MetaTXAdapterSellerRegistry
             this.contract.interface,
             "removePaymentChannels",
             [paymentChannels.map(address => address.stringValue)],
-            "RemovedPaymentChannels",
+            "PaymentChannelsRemoved",
             (_) => {}));
     }
 
