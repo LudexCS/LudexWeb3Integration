@@ -1,7 +1,7 @@
 import { ethers } from "ethers"; 
 import { LudexConfig } from "../configs";
 import { Address } from "../address";
-import { LudexContract } from "ludex-contracts/*";
+import { LudexContract } from "ludex-contracts";
 import { RelayRequest } from "./relay-request";
 import { EIP712 } from "../utils/eip712";
 import { ERC2771 } from "../utils/erc2771";
