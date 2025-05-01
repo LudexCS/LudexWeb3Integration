@@ -1,5 +1,5 @@
 export type ChainConfig = {
-    chainId: number;         // hex string
+    chainId: string;         // hex string
     chainName: string;
     rpcUrls: string[];
     blockExplorerUrls?: string[];
