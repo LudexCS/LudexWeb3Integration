@@ -126,7 +126,7 @@ export class AdminAdapterItemRegistry
 
     public async suspendItemSale (itemID: bigint)
     : Promise<Array<bigint>>
-    {return await this.callAndListen(
+    {return await this.callAndParseLog(
         await this.contract.suspendItemSale(itemID),
         "ItemSaleSuspended",
         (item: bigint, suspension: bigint[]) => {
@@ -137,7 +137,7 @@ export class AdminAdapterItemRegistry
 
     public async resumeItemSale (itemID: bigint)
     : Promise<Array<bigint>>
-    {return await this.callAndListen(
+    {return await this.callAndParseLog(
         await this.contract.resumeItemSale(itemID),
         "ItemSaleResumed",
         (item: bigint, resume: bigint[]) => {
@@ -161,7 +161,7 @@ export class ServiceAdapterItemRegistry
         seller: Address, 
         parents: Array<bigint>
     ): Promise<bigint>
-    {return await this.callAndListen(
+    {return await this.callAndParseLog(
         await this.contract.registerItem(itemName, seller.stringValue),
         "ItemRegistered",
         (itemName: string, seller: string, itemID: bigint) => {

@@ -96,73 +96,46 @@ export abstract class Adapter<
       this.eventTimeout = eventTimeout;
    }
 
-   protected async callAndListen<T>(
-      tx: ethers.TransactionResponse,
-      eventName: string,
-      onEmit: (...args: any[]) => T
-   ): Promise<T>
+   protected async callAndParseLog<V>(
+   tx: ethers.TransactionResponse,
+   eventName: string,
+   onEmit: (...args: any[]) => V
+   ): Promise<V> 
    {
-      let eventFilter = this.contract.filters[eventName]?.();
-      if (!eventFilter)
-         throw new Web3Error(`Event ${eventName} is not found in the contract`);
-   
-      let resolveFunction: (value: T) => void;
-      let rejectFunction: (reason?: any) => void;
-
-      let resultPromise = new Promise<T>((resolve, reject) => {
-         resolveFunction = resolve;
-         rejectFunction = reject;
-      });
-
-      let listener = (...args: any[]) => {
-         let event = args[args.length - 1] as ethers.Log;
-         if (event.transactionHash === tx.hash)
-         {
-            this.contract.removeListener(eventName, listener);
-            resolveFunction(onEmit(...args));
-         }
-      };
-
-      this.contract.on(eventName, listener);
-
-      try{
-         let receipt = await Promise.race([
-            tx.wait(),
-            new Promise((_, reject) => 
-               setTimeout(() => 
-                  reject(new EthereumError("Transaction confirmation timeout")),
-                  this.txTimeOut))
-         ]);
-
-         if (receipt === null)
-         {
-            throw new EthereumError("Transaction failed");
-         }
-
-         let timeout = 
+      const receipt = await Promise.race([
+         tx.wait(),
+         new Promise<never>((_, reject) =>
             setTimeout(
-               () => {
-                  rejectFunction(
-                     new EthereumError(
-                        `'${eventName}' not found in the transaction`));
-                  },
-               this.eventTimeout);
+               () => reject(new EthereumError("Transaction confirmation timeout")),
+               this.txTimeOut
+            ))
+      ]);
 
-         let result = await resultPromise;
-
-         clearTimeout(timeout);
-         return result;
-      }
-      catch (error) 
-      {
-         throw error;
-      }
-      finally
-      {
-         this.contract.removeListener(eventName, listener);
+      if (!receipt) {
+         throw new EthereumError("Transaction failed");
       }
 
-   }
+      const logs = await this.contract.queryFilter(
+         this.contract.filters[eventName]?.(),
+         receipt.blockNumber,
+         receipt.blockNumber
+      );
+
+      const log = logs.find(log => log.transactionHash === tx.hash);
+      if (!log) {
+         throw new EthereumError(`'${eventName}' not found in transaction logs`);
+      }
+
+      const decodedArgs = this.contract.interface.decodeEventLog(
+         eventName,
+         log.data,
+         log.topics
+      );
+
+      return onEmit(...decodedArgs);
+}
+ 
+ 
 
 }
 

@@ -126,7 +126,7 @@ export class AdminAdapterPriceTable
 
     public async changeExchangeRate(token: Address, usdToToken: bigint)
     : Promise<bigint>
-    {return await this.callAndListen(
+    {return await this.callAndParseLog(
         await this.contract.changeExchangeRate(token.stringValue, usdToToken),
         "ExchangeRateChanged",
         (token: string, usdToToken:bigint, prevExchangeRate: bigint) => {
@@ -138,7 +138,7 @@ export class AdminAdapterPriceTable
 
     public async addPaymentChannel(token: Address, usdToToken: bigint)
     : Promise<void>
-    {return await this.callAndListen(
+    {return await this.callAndParseLog(
         await this.contract.addPaymentChannel(token.stringValue, usdToToken),
         "PaymentChannelAdded",
         (token: string, usdToToken: bigint) => {
@@ -149,7 +149,7 @@ export class AdminAdapterPriceTable
 
     public async removePaymentChannel(token: Address)
     : Promise<boolean>
-    {return await this.callAndListen(
+    {return await this.callAndParseLog(
         await this.contract.removePaymentChannel(token.stringValue),
         "PaymentChannelRemoved",
         (token: string, isSuccess: boolean) => {
