@@ -13,6 +13,9 @@ export interface IPriceTableReadOnlyAccess
 
     getPriceInfoList(itemID: bigint)
     : Promise<PriceInfo[]>;
+
+    getExchangeRateOf(token: Address)
+    : Promise<bigint>;
 }
 
 export interface IPriceTableMetaTXAccess extends IPriceTableReadOnlyAccess
@@ -62,6 +65,10 @@ export class ReadonlyAdapterPriceTable<
     public async getPriceInfoList(itemID: bigint): Promise<PriceInfo[]> {
         return await this.contract.getPriceInfoList(itemID);
     }   
+
+    public async getExchangeRateOf(token: Address): Promise<bigint> {
+        return await this.contract.usdToToken(token.stringValue);
+    }
 
 }
 
