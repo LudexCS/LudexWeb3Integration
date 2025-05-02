@@ -43,7 +43,7 @@ export class MetaTXAdapterComponent
 
       let userAddress = await this.runner.getAddress();
 
-      let forwarderNonce = await this.forwarder.getNonce(userAddress);
+      let forwarderNonce = await this.forwarder.nonces(userAddress);
 
       let calldata = contractInterface.encodeFunctionData(func, params);
 
