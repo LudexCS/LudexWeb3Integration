@@ -103,16 +103,19 @@ export class RelayMaster
         try{
             await this.verify(relayRequest);
 
+            let requestData = {
+                from: relayRequest.request.from,
+                to: relayRequest.request.to,
+                value: relayRequest.request.value,
+                gas: relayRequest.request.gas,
+                deadline: deadline,
+                data: relayRequest.request.data,
+                signature: relayRequest.signature
+            };
+
             let tx: ethers.TransactionResponse = 
                 await (
-                    this.forwarder.execute(
-                        relayRequest.request.from, 
-                        relayRequest.request.to,
-                        relayRequest.request.value,
-                        relayRequest.request.gas,
-                        deadline,
-                        relayRequest.request.data,
-                        relayRequest.signature));
+                    this.forwarder.execute(requestData));
 
             txHash = tx.hash;
             for (let slave of this.slaves)
