@@ -95,11 +95,6 @@ export class MetaTXAdapterSellerRegistry
                 return isSuccess;   
             }
 
-        let onResponseFunctionFunction = (log: ethers.Log): boolean => {
-            return (
-                this.contract.interface.parseLog(log)?.args.isSuccess as boolean);
-        };
-
         return await (
             this.component.createForwarderRequest(
                 this.contractAddress,
@@ -108,7 +103,7 @@ export class MetaTXAdapterSellerRegistry
                 [paymentChannels.map(address => address.stringValue)],
                 deadline,
                 "SellerRegistered",
-                onResponseFunctionFunction));
+                onResponseFunction));
     }
 
     public async addPaymentChannelsRequest(
