@@ -45,32 +45,40 @@ export class RelayMaster
         if (event !== undefined) this.eventTimeOutms = event;
     }
 
-    private async verify(relayRequest: RelayRequest<any>): Promise<void>
-    {
-        let promise = 
-            EIP712.getDomainOfContract(this.forwarder)
-            .then(domain => {
-                let types = ERC2771.ForwardRequestTypeDef;
-                return (
-                    ethers.verifyTypedData(
-                        domain, 
-                        types, 
-                        relayRequest.request,
-                        relayRequest.signature));})
-            .then(recoveredAddress => {
-                let from = relayRequest.request.from.toLowerCase();
-                new Promise<void>((resolve, reject) =>
-                    (from === recoveredAddress.toLowerCase())
-                    ? resolve()
-                    : reject(new EthereumError("Verification failed")))});
-        let timeout = 
-            new Promise<never>(
-                (_, reject) => 
-                    setTimeout(() => 
-                        reject(new Web3Error("Verification timeout")),
-                        this.verificationTimeoutMs));
-        return Promise.race([promise, timeout]);
+    private async verify(relayRequest: RelayRequest<any>): Promise<void> {
+        const domain = await EIP712.getDomainOfContract(this.forwarder);
+
+        const verifyPromise = (async () => {
+            const recoveredAddress = ethers.verifyTypedData(
+                domain,
+                ERC2771.ForwardRequestTypeDef,
+                relayRequest.request,
+                relayRequest.signature
+            );
+
+            const expected = relayRequest.request.from.toLowerCase();
+            const actual = recoveredAddress.toLowerCase();
+
+            console.log("[EIP712 Domain]", domain);
+            console.log("[Recovered Address]", actual);
+            console.log("[Expected Address]", expected);
+
+            if (expected !== actual) {
+                throw new EthereumError(
+                    "Signature verification failed: mismatched signer");
+            }
+        })();
+
+        const timeoutPromise = new Promise<never>((_, reject) =>
+            setTimeout(
+                () => reject(new Web3Error("Verification timeout")),
+                this.verificationTimeoutMs
+            )
+        );
+
+        return Promise.race([verifyPromise, timeoutPromise]);
     }
+ 
 
     private async waitTX (tx: ethers.TransactionResponse)
     : Promise<void>
