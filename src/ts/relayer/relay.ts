@@ -9,6 +9,7 @@ import { RelayMaster, createLudexRelayMaster } from "./relayer-master";
 export { 
     RelayRequest, 
     serializeRelayRequest,
+    deserializeRelayRequest,
     RelaySlave, 
     RelayMaster, 
     createLudexRelayMaster 
