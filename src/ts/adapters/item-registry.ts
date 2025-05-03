@@ -36,8 +36,12 @@ export interface IItemRegistryAdminAccess
 export interface IItemRegistryServiceAccess 
     extends IItemRegistryAdminAccess
 {
-    registerItem(itemName: string, seller: Address, parents: Array<bigint>)
-    : Promise<bigint>;
+    registerItem(
+        itemName: string, 
+        seller: Address, 
+        parents: Array<bigint>,
+        usdPrice: bigint
+    ): Promise<bigint>;
 }
 
 export class ReadonlyAdapterItemRegistry<
@@ -159,10 +163,15 @@ export class ServiceAdapterItemRegistry
     public async registerItem(
         itemName: string, 
         seller: Address, 
-        parents: Array<bigint>
+        parents: Array<bigint>,
+        usdPrice: bigint
     ): Promise<bigint>
     {return await this.callAndParseLog(
-        await this.contract.registerItem(itemName, seller.stringValue),
+        await this.contract.registerItem(
+            itemName, 
+            seller.stringValue, 
+            parents,
+            usdPrice),
         "ItemRegistered",
         (itemName: string, seller: string, itemID: bigint) => {
             console.log(`New item registered: ${itemName} by ${seller}`);
