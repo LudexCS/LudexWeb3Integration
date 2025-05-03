@@ -110,20 +110,18 @@ export class RelayMaster
         try {
             await this.verify(relayRequest);
 
-            const forwardRequest = [
-                relayRequest.request.from,
-                relayRequest.request.to,
-                relayRequest.request.value,
-                relayRequest.request.gas,
-                relayRequest.request.nonce,
-                relayRequest.request.data
-            ];
+            const forwardRequestObject = {
+                from: relayRequest.request.from,
+                to: relayRequest.request.to,
+                value: relayRequest.request.value,
+                gas: relayRequest.request.gas,
+                deadline: deadline,
+                data: relayRequest.request.data,
+                signature: relayRequest.signature
+            };
 
             const executeFn = this.forwarder.getFunction("execute");
-            const txRequest = await executeFn.populateTransaction(
-                forwardRequest,
-                relayRequest.signature
-            );
+            const txRequest = await executeFn.populateTransaction(forwardRequestObject);
 
             if (!this.forwarder.runner || typeof this.forwarder.runner.estimateGas !== "function") {
                 throw new EthereumError("estimateGas is not available on forwarder.runner");
@@ -131,11 +129,7 @@ export class RelayMaster
 
             await this.forwarder.runner.estimateGas(txRequest);
 
-            const tx = await this.forwarder.execute(
-                forwardRequest,
-                relayRequest.signature
-            );
-
+            const tx: ethers.TransactionResponse = await this.forwarder.execute(forwardRequestObject);
             txHash = tx.hash;
 
             if (txHash !== null) {
@@ -161,6 +155,7 @@ export class RelayMaster
             }
         }
     }
+
  
 }
 
