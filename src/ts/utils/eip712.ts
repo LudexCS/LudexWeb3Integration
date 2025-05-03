@@ -9,15 +9,23 @@ export namespace EIP712
         verifyingContract: string;
     };
 
-    export async function getDomainOfContract (contract: ethers.Contract)
-    : Promise<Domain>
-    {
-        let domainObject = await contract.eip712Domain();
+    export async function getDomainOfContract (contract: ethers.Contract): Promise<Domain> {
+        const [
+            _fields,
+            name,
+            version,
+            chainId,
+            verifyingContract,
+            _salt,
+            _extensions
+        ] = await contract.eip712Domain();
+
         return {
-            name: domainObject.name,
-            version: domainObject.version,
-            chainId: Number(domainObject.chainId),
-            verifyingContract: domainObject.verifyingContract
+            name,
+            version,
+            chainId: Number(chainId),
+            verifyingContract
         };
     }
+ 
 };
