@@ -99,58 +99,69 @@ export class RelayMaster
     }
 
     public async acceptRequest(
-        relayRequest: RelayRequest<any>, 
+        relayRequest: RelayRequest<any>,
         deadline: number,
         sendResponse: (response: any) => void,
-        onError: (error: Error) => void)
-    : Promise<void>
-    {
+        onError: (error: Error) => void
+    ): Promise<void> {
         let eventName = relayRequest.responseEvent;
         let txHash: string | null = null;
 
-        try{
+        try {
             await this.verify(relayRequest);
 
-            let requestData = {
-                from: relayRequest.request.from,
-                to: relayRequest.request.to,
-                value: relayRequest.request.value,
-                gas: relayRequest.request.gas,
-                deadline: deadline,
-                data: relayRequest.request.data,
-                signature: relayRequest.signature
-            };
+            const forwardRequest = [
+                relayRequest.request.from,
+                relayRequest.request.to,
+                relayRequest.request.value,
+                relayRequest.request.gas,
+                relayRequest.request.nonce,
+                relayRequest.request.data
+            ];
 
-            let tx: ethers.TransactionResponse = 
-                await (
-                    this.forwarder.execute(requestData));
+            const executeFn = this.forwarder.getFunction("execute");
+            const txRequest = await executeFn.populateTransaction(
+                forwardRequest,
+                relayRequest.signature
+            );
+
+            if (!this.forwarder.runner || typeof this.forwarder.runner.estimateGas !== "function") {
+                throw new EthereumError("estimateGas is not available on forwarder.runner");
+            }
+
+            await this.forwarder.runner.estimateGas(txRequest);
+
+            const tx = await this.forwarder.execute(
+                forwardRequest,
+                relayRequest.signature
+            );
 
             txHash = tx.hash;
-            for (let slave of this.slaves)
-            {
-                slave.startListening(eventName, sendResponse, txHash);
+
+            if (txHash !== null) {
+                for (const slave of this.slaves) {
+                    slave.startListening(eventName, sendResponse, txHash);
+                }
             }
-            
+
             await this.waitTX(tx);
 
-            return new Promise<never>((_, reject) => 
+            return new Promise<never>((_, reject) =>
                 setTimeout(() => reject(new EthereumError("No event happened")),
                     this.eventTimeOutms));
-        }
-        catch (error)
-        {
-            if (error instanceof Error)
-            {
+        } catch (error) {
+            if (error instanceof Error) {
                 onError(error);
             }
-        }
-        finally
-        {
-            if (!txHash) return;
-            for (let slave of this.slaves)
-                slave.stopListening(eventName, txHash);
+        } finally {
+            if (txHash !== null) {
+                for (const slave of this.slaves) {
+                    slave.stopListening(eventName, txHash);
+                }
+            }
         }
     }
+ 
 }
 
 export function createLudexRelayMaster(
