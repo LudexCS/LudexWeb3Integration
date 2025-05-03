@@ -11,6 +11,7 @@ export namespace ERC2771
         value: bigint;     
         gas: bigint;       
         nonce: bigint;     
+        deadline: bigint;
         data: string;  
     };
 
@@ -21,6 +22,7 @@ export namespace ERC2771
             { name: 'value', type: 'uint256' },
             { name: 'gas', type: 'uint256' },
             { name: 'nonce', type: 'uint256' },
+            { name: 'deadline', type: 'uint48' },
             { name: 'data', type: 'bytes' }
         ]
     };

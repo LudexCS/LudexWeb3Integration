@@ -15,6 +15,7 @@ export type RelayRequestData = {
         value: string;
         gas: string;
         nonce: string;
+        deadline: string;
         data: string;
     },
     signature: string;
@@ -31,6 +32,7 @@ export function serializeRelayRequest(relayRequest: RelayRequest<any>)
             value: relayRequest.request.value.toString(),
             gas: relayRequest.request.gas.toString(),
             nonce: relayRequest.request.nonce.toString(),
+            deadline: relayRequest.request.deadline.toString()
         }
 }));}
 
@@ -43,7 +45,8 @@ export function deserializeRelayRequest(data: RelayRequestData)
             ...data.request,
             value: BigInt(data.request.value),
             gas: BigInt(data.request.gas),
-            nonce: BigInt(data.request.nonce)
+            nonce: BigInt(data.request.nonce),
+            deadline: BigInt(data.request.deadline)
         },
         onResponse: (..._) => undefined
     }   

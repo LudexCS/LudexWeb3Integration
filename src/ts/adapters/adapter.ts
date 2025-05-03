@@ -35,6 +35,7 @@ export class MetaTXAdapterComponent
       contractInterface: ethers.Interface,
       func: string,
       params: ReadonlyArray<any>,
+      deadline: bigint,
       responseEvent: string,
       onResponseFunctionFunction: (...args: any) => T
    ): Promise<RelayRequest<T>>
@@ -53,6 +54,7 @@ export class MetaTXAdapterComponent
          value: BigInt(0),
          gas: BigInt(30_000_000),
          nonce: forwarderNonce,
+         deadline: BigInt(Math.floor(Date.now() / 1000)) + deadline,
          data: calldata
       };
 

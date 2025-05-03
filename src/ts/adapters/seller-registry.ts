@@ -17,13 +17,13 @@ export interface ISellerRegistryReadonlyAccess
 export interface ISellerRegistryMetaTXAccess 
     extends ISellerRegistryReadonlyAccess
 {
-    registerSellerRequest(paymentChannels: Array<Address>)
+    registerSellerRequest(paymentChannels: Array<Address>, deadline: bigint)
     : Promise<RelayRequest<boolean>>;
 
-    addPaymentChannelsRequest(paymentChannels: Array<Address>)
+    addPaymentChannelsRequest(paymentChannels: Array<Address>, deadline: bigint)
     : Promise<RelayRequest<void>>;
 
-    removePaymentChannelsRequest(paymentChannels: Array<Address>)
+    removePaymentChannelsRequest(paymentChannels: Array<Address>, deadline: bigint)
     : Promise<RelayRequest<void>>;
 }
 
@@ -85,8 +85,10 @@ export class MetaTXAdapterSellerRegistry
         super(config, component);
     }
     
-    public async registerSellerRequest (paymentChannels: Array<Address>)
-    : Promise<RelayRequest<boolean>>
+    public async registerSellerRequest (
+        paymentChannels: Array<Address>, 
+        deadline: bigint
+    ): Promise<RelayRequest<boolean>>
     {
         let onResponseFunctionFunction = (log: ethers.Log): boolean => {
             return (
@@ -99,12 +101,14 @@ export class MetaTXAdapterSellerRegistry
                 this.contract.interface,
                 "registerSeller", 
                 [paymentChannels.map(address => address.stringValue)],
+                deadline,
                 "SellerRegistered",
                 onResponseFunctionFunction));
     }
 
     public async addPaymentChannelsRequest(
-        paymentChannels: Array<Address>
+        paymentChannels: Array<Address>,
+        deadline: bigint
     ): Promise<RelayRequest<void>>
     {return await(
         this.component.createForwarderRequest(
@@ -112,12 +116,14 @@ export class MetaTXAdapterSellerRegistry
             this.contract.interface,
             "addPaymentChannels",
             [paymentChannels.map(address => address.stringValue)],
+            deadline,
             "PaymentChannelsAdded",
             (_) => {}));
     }
 
     public async removePaymentChannelsRequest(
-        paymentChannels: Array<Address>
+        paymentChannels: Array<Address>,
+        deadline: bigint
     ): Promise<RelayRequest<void>>
     {return await(
         this.component.createForwarderRequest(
@@ -125,6 +131,7 @@ export class MetaTXAdapterSellerRegistry
             this.contract.interface,
             "removePaymentChannels",
             [paymentChannels.map(address => address.stringValue)],
+            deadline,
             "PaymentChannelsRemoved",
             (_) => {}));
     }

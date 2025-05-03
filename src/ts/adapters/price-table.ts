@@ -20,10 +20,13 @@ export interface IPriceTableReadOnlyAccess
 
 export interface IPriceTableMetaTXAccess extends IPriceTableReadOnlyAccess
 {
-    changeItemPriceRequest(itemID: bigint, priceUsd: bigint)
-    : Promise<RelayRequest<bigint>>;
+    changeItemPriceRequest(
+        itemID: bigint, 
+        priceUsd: bigint, 
+        deadline: bigint
+    ): Promise<RelayRequest<bigint>>;
     
-    startDiscount(itemID: bigint, usdPrice: bigint, endTime: Date)
+    startDiscountRequest(itemID: bigint, usdPrice: bigint, endTime: Date, deadline: bigint)
     : Promise<RelayRequest<void>>;
 }
 
@@ -89,8 +92,11 @@ export class MetaTXAdapterPriceTable
         super(config, component);
     }
 
-    public async changeItemPriceRequest(itemID: bigint, priceUsd: bigint)
-    : Promise<RelayRequest<bigint>>
+    public async changeItemPriceRequest(
+        itemID: bigint, 
+        priceUsd: bigint, 
+        deadline: bigint
+    ): Promise<RelayRequest<bigint>>
     {
         let onResponseFunctionFunction = 
             (itemID: bigint, priceUsd: bigint, prevPriceUsd: bigint) => 
@@ -101,15 +107,17 @@ export class MetaTXAdapterPriceTable
                 this.contractAddress,
                 this.contract.interface,
                 "changeItemPrice", [itemID, priceUsd],
+                deadline,
                 "ItemPriceChanged",
                 onResponseFunctionFunction
             ));
     }
 
-    public async startDiscount(
+    public async startDiscountRequest(
         itemID: bigint,
         usdPrice: bigint,
-        endTime: Date
+        endTime: Date,
+        deadline: bigint
     ): Promise<RelayRequest<void>>
     {
         return await (
@@ -117,6 +125,7 @@ export class MetaTXAdapterPriceTable
                 this.contractAddress,
                 this.contract.interface,
                 "startDiscount", [itemID, usdPrice, endTime.getTime() / 1000],
+                deadline,
                 "DiscountStarted",
                 (_) => {}));
     }

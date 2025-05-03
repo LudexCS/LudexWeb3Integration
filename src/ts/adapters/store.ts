@@ -71,6 +71,7 @@ export class MetaTXAdapterStore
             this.contractAddress,
             this.contract.interface,
             "purchaseItem", [itemID, token.stringValue, v, r, s],
+            deadline,
             "ItemPurchased",
             onResponseFunctionFunction));
    }
