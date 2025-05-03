@@ -1,5 +1,15 @@
-import { RelayRequest } from "./relay-request";
+import { 
+    RelayRequest, 
+    serializeRelayRequest,
+    deserializeRelayRequest
+} from "./relay-request";
 import { RelaySlave } from "./relay-slave";
 import { RelayMaster, createLudexRelayMaster } from "./relayer-master";
 
-export { RelayRequest, RelaySlave, RelayMaster, createLudexRelayMaster }
+export { 
+    RelayRequest, 
+    serializeRelayRequest,
+    RelaySlave, 
+    RelayMaster, 
+    createLudexRelayMaster 
+}
