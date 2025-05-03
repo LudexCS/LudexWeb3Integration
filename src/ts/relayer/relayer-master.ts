@@ -120,15 +120,6 @@ export class RelayMaster
                 signature: relayRequest.signature
             };
 
-            const executeFn = this.forwarder.getFunction("execute");
-            const txRequest = await executeFn.populateTransaction(forwardRequestObject);
-
-            if (!this.forwarder.runner || typeof this.forwarder.runner.estimateGas !== "function") {
-                throw new EthereumError("estimateGas is not available on forwarder.runner");
-            }
-
-            await this.forwarder.runner.estimateGas(txRequest);
-
             const tx: ethers.TransactionResponse = await this.forwarder.execute(forwardRequestObject);
             txHash = tx.hash;
 
