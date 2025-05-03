@@ -1,6 +1,5 @@
 import { ethers } from "ethers";
 import { Address } from "../address";
-import { EthereumError } from "../error";
 
 export class RelaySlave {
     private readonly contract: ethers.Contract;
@@ -16,29 +15,25 @@ export class RelaySlave {
         sendResponse: (response: any) => void
     ): Promise<boolean> 
     {
-        const filter = this.contract.filters[eventName]?.();
-        if (!filter) {
-            throw new EthereumError(`'${eventName}' not found in contract filters`);
+        try {
+            const filter = this.contract.filters[eventName]?.();
+            if (!filter) return false;
+
+            const logs = await this.contract.queryFilter(filter, blockNumber, blockNumber);
+            const log = logs.find(log => log.transactionHash === txHash);
+            if (!log) return false;
+
+            const decodedArgs = this.contract.interface.decodeEventLog(
+                eventName,
+                log.data,
+                log.topics
+            );
+
+            sendResponse([...decodedArgs]);
+            return true;
+
+        } catch {
+            return false;
         }
-
-        const logs = await this.contract.queryFilter(
-            filter,
-            blockNumber,
-            blockNumber
-        );
-
-        const log = logs.find(log => log.transactionHash === txHash);
-        if (!log) {
-            throw new EthereumError(`'${eventName}' not found in transaction logs`);
-        }
-
-        const decodedArgs = this.contract.interface.decodeEventLog(
-            eventName,
-            log.data,
-            log.topics
-        );
-
-        sendResponse([...decodedArgs]); 
-        return true;
     }
 }
