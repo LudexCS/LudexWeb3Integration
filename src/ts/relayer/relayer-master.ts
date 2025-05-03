@@ -153,7 +153,7 @@ export function createLudexRelayMaster(
     ludexConfig: LudexConfig, forwarderAddress: Address, signer: ethers.Signer
 ): RelayMaster
 {
-    console.log(`SellerRegistryABI: ${LudexContract.ABI.SellerRegistry}`);
+    console.log(`SellerRegistryABI: ${JSON.stringify(LudexContract.ABI.SellerRegistry)}`);
 
     let slaves = [
         new RelaySlave(
