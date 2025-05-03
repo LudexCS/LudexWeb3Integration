@@ -98,7 +98,7 @@ export class MetaTXAdapterPriceTable
         deadline: bigint
     ): Promise<RelayRequest<bigint>>
     {
-        let onResponseFunctionFunction = 
+        let onResponseFunction = 
             (itemID: bigint, priceUsd: bigint, prevPriceUsd: bigint) => 
                 prevPriceUsd;
         
@@ -109,7 +109,7 @@ export class MetaTXAdapterPriceTable
                 "changeItemPrice", [itemID, priceUsd],
                 deadline,
                 "ItemPriceChanged",
-                onResponseFunctionFunction
+                onResponseFunction
             ));
     }
 

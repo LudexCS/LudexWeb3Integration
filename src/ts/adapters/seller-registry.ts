@@ -90,6 +90,11 @@ export class MetaTXAdapterSellerRegistry
         deadline: bigint
     ): Promise<RelayRequest<boolean>>
     {
+        let onResponseFunction = 
+            (_seller: string, _channels: string[], isSuccess: boolean) => {
+                return isSuccess;   
+            }
+
         let onResponseFunctionFunction = (log: ethers.Log): boolean => {
             return (
                 this.contract.interface.parseLog(log)?.args.isSuccess as boolean);

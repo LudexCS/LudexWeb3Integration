@@ -63,7 +63,7 @@ export class MetaTXAdapterStore
 
       let { v, r, s } = ethers.Signature.from(signature);
 
-      let onResponseFunctionFunction = 
+      let onResponseFunction = 
          (itemID: bigint, buyer: string, tokenID: bigint) => tokenID;
 
       return await (
@@ -73,7 +73,7 @@ export class MetaTXAdapterStore
             "purchaseItem", [itemID, token.stringValue, v, r, s],
             deadline,
             "ItemPurchased",
-            onResponseFunctionFunction));
+            onResponseFunction));
    }
    
 }
