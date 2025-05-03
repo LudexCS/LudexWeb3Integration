@@ -14,25 +14,31 @@ export class RelaySlave {
         blockNumber: number,
         txHash: string,
         sendResponse: (response: any) => void
-    ): Promise<boolean> {
+    ): Promise<boolean> 
+    {
         const filter = this.contract.filters[eventName]?.();
         if (!filter) {
-            throw new EthereumError(`Event '${eventName}' not found in ABI`);
+            throw new EthereumError(`'${eventName}' not found in contract filters`);
         }
 
-        const logs = await this.contract.queryFilter(filter, blockNumber, blockNumber);
+        const logs = await this.contract.queryFilter(
+            filter,
+            blockNumber,
+            blockNumber
+        );
+
         const log = logs.find(log => log.transactionHash === txHash);
         if (!log) {
-            return false; 
+            throw new EthereumError(`'${eventName}' not found in transaction logs`);
         }
 
-        const decodedArgs = this.contract.interface.parseLog(log);
-        if(!decodedArgs)
-        {
-            return false;
-        }
+        const decodedArgs = this.contract.interface.decodeEventLog(
+            eventName,
+            log.data,
+            log.topics
+        );
 
-        sendResponse([...decodedArgs.args]); 
+        sendResponse([...decodedArgs]); 
         return true;
     }
 }
