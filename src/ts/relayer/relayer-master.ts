@@ -92,6 +92,7 @@ export class RelayMaster
 
     public async acceptRequest(
         relayRequest: RelayRequest<any>, 
+        deadline: number,
         sendResponse: (response: any) => void,
         onError: (error: Error) => void)
     : Promise<void>
@@ -105,7 +106,12 @@ export class RelayMaster
             let tx: ethers.TransactionResponse = 
                 await (
                     this.forwarder.execute(
-                        relayRequest.request, 
+                        relayRequest.request.from, 
+                        relayRequest.request.to,
+                        relayRequest.request.value,
+                        relayRequest.request.gas,
+                        deadline,
+                        relayRequest.request.data,
                         relayRequest.signature));
 
             txHash = tx.hash;
