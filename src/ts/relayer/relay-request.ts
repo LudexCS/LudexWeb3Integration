@@ -8,7 +8,7 @@ export type RelayRequest<T> = {
     onResponse: (...args: any[]) => T;
 };
 
-type RelayRequestSerialization = {
+export type RelayRequestData = {
     request: {
         from: string;
         to: string;
@@ -34,22 +34,17 @@ export function serializeRelayRequest(relayRequest: RelayRequest<any>)
         }
 }));}
 
-export function deserializeRelayRequest(data: string)
+export function deserializeRelayRequest(data: RelayRequestData)
 : RelayRequest<any>
 {
-    const serialization: RelayRequestSerialization = JSON.parse(data);
-
     return {
+        ...data,
         request: {
-            from: serialization.request.from,
-            to: serialization.request.to,
-            value: BigInt(serialization.request.value),
-            gas: BigInt(serialization.request.gas),
-            nonce: BigInt(serialization.request.nonce),
-            data: serialization.request.data
+            ...data.request,
+            value: BigInt(data.request.value),
+            gas: BigInt(data.request.gas),
+            nonce: BigInt(data.request.nonce)
         },
-        signature: serialization.signature,
-        responseEvent: serialization.responseEvent,
-        onResponse: (...args) => undefined
+        onResponse: (..._) => undefined
     }   
 }
