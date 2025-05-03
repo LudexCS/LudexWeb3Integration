@@ -1,50 +1,38 @@
 import { ethers } from "ethers";
 import { Address } from "../address";
+import { EthereumError } from "../error";
 
-export class RelaySlave
-{
+export class RelaySlave {
     private readonly contract: ethers.Contract;
-    private readonly filteredCallback
-        : Map<string, (...args: any[]) => void>;
 
-    public constructor (contractAddress: Address, abi: any, signer: ethers.Signer)
-    {
-        this.contract = (
-            new ethers.Contract(
-                contractAddress.stringValue,
-                abi,
-                signer));
-        this.filteredCallback = new Map();
+    public constructor(contractAddress: Address, abi: any, signer: ethers.Signer) {
+        this.contract = new ethers.Contract(contractAddress.stringValue, abi, signer);
     }
 
-    public startListening (
-        eventName: string, 
-        callback: (...args: any[]) => void,
-        transactionHash: string)
-    {
-        let actualCallback = (...args: any[]) => {
-            let log = args[args.length - 1] as ethers.Log;
-
-            if (log.transactionHash !== transactionHash)
-                return;
-        
-            callback(args);
-
-            this.filteredCallback.delete(transactionHash);
-            this.contract.off(eventName, actualCallback);
+    public async queryAndParseLog(
+        eventName: string,
+        blockNumber: number,
+        txHash: string,
+        sendResponse: (response: any) => void
+    ): Promise<boolean> {
+        const filter = this.contract.filters[eventName]?.();
+        if (!filter) {
+            throw new EthereumError(`Event '${eventName}' not found in ABI`);
         }
-        this.filteredCallback.set(transactionHash, actualCallback);
-        this.contract.on(eventName, callback);
-    }
 
-    public stopListening (
-        eventName: string, 
-        transactionHash: string)
-    {
-        let callbackToRemove = this.filteredCallback.get(transactionHash);
-        if (callbackToRemove === undefined)
-            return;
-        this.contract.off(eventName, callbackToRemove);
-        this.filteredCallback.delete(transactionHash);
+        const logs = await this.contract.queryFilter(filter, blockNumber, blockNumber);
+        const log = logs.find(log => log.transactionHash === txHash);
+        if (!log) {
+            return false; 
+        }
+
+        const decodedArgs = this.contract.interface.parseLog(log);
+        if(!decodedArgs)
+        {
+            return false;
+        }
+
+        sendResponse([...decodedArgs.args]); 
+        return true;
     }
 }

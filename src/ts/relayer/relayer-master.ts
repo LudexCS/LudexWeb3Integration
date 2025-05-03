@@ -81,13 +81,13 @@ export class RelayMaster
  
 
     private async waitTX (tx: ethers.TransactionResponse)
-    : Promise<void>
+    : Promise<ethers.TransactionReceipt>
     {
         let promise = 
             tx.wait().then(receipt => 
-                new Promise<void>((resolve, reject) => {
+                new Promise<ethers.TransactionReceipt>((resolve, reject) => {
                     (receipt)
-                    ? resolve()
+                    ? resolve(receipt)
                     : reject(new EthereumError("Transaction receipt was null"))}));
         let timeout = 
             new Promise<never>(
@@ -103,8 +103,7 @@ export class RelayMaster
         sendResponse: (response: any) => void,
         onError: (error: Error) => void
     ): Promise<void> {
-        let eventName = relayRequest.responseEvent;
-        let txHash: string | null = null;
+        const eventName = relayRequest.responseEvent;
 
         try {
             await this.verify(relayRequest);
@@ -120,31 +119,28 @@ export class RelayMaster
             };
 
             const tx: ethers.TransactionResponse = await this.forwarder.execute(forwardRequestObject);
-            txHash = tx.hash;
+            const receipt = await this.waitTX(tx);
+            const blockNumber = receipt.blockNumber;
 
-            if (txHash !== null) {
-                for (const slave of this.slaves) {
-                    slave.startListening(eventName, sendResponse, txHash);
-                }
+            for (const slave of this.slaves) {
+                const success = await slave.queryAndParseLog(
+                    eventName,
+                    blockNumber,
+                    tx.hash,
+                    sendResponse
+                );
+                if (success) return;
             }
 
-            await this.waitTX(tx);
+            throw new EthereumError("No matching event found in any slave");
 
-            return new Promise<never>((_, reject) =>
-                setTimeout(() => reject(new EthereumError("No event happened")),
-                    this.eventTimeOutms));
         } catch (error) {
             if (error instanceof Error) {
                 onError(error);
             }
-        } finally {
-            if (txHash !== null) {
-                for (const slave of this.slaves) {
-                    slave.stopListening(eventName, txHash);
-                }
-            }
         }
     }
+
 
  
 }
