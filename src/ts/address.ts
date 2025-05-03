@@ -17,6 +17,6 @@ export class Address {
       if (!ethers.isAddress(addressString))
          throw new Web3Error(`Invalid address of ${addressString}`)
       else
-         return new Address(addressString);
+         return new Address(ethers.getAddress(addressString));
    }
 }

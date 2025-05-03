@@ -100,7 +100,7 @@ export class RelayMaster
 
     public async acceptRequest(
         relayRequest: RelayRequest<any>,
-        deadline: number,
+        deadline: bigint,
         sendResponse: (response: any) => void,
         onError: (error: Error) => void
     ): Promise<void> {
