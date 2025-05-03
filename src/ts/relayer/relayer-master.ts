@@ -115,7 +115,7 @@ export class RelayMaster
 
             let tx: ethers.TransactionResponse = 
                 await (
-                    this.forwarder.execute(requestData));
+                    this.forwarder.getFunction("execute").staticCall(requestData));
 
             txHash = tx.hash;
             for (let slave of this.slaves)
