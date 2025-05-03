@@ -51,7 +51,7 @@ export class MetaTXAdapterComponent
          from: userAddress,
          to: contractAddress.stringValue,
          value: BigInt(0),
-         gas: BigInt(1000000),
+         gas: BigInt(30_000_000),
          nonce: forwarderNonce,
          data: calldata
       };
