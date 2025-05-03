@@ -59,10 +59,6 @@ export class RelayMaster
             const expected = relayRequest.request.from.toLowerCase();
             const actual = recoveredAddress.toLowerCase();
 
-            console.log("[EIP712 Domain]", domain);
-            console.log("[Recovered Address]", actual);
-            console.log("[Expected Address]", expected);
-
             if (expected !== actual) {
                 throw new EthereumError(
                     "Signature verification failed: mismatched signer");
@@ -149,8 +145,6 @@ export function createLudexRelayMaster(
     ludexConfig: LudexConfig, forwarderAddress: Address, signer: ethers.Signer
 ): RelayMaster
 {
-    console.log(`SellerRegistryABI: ${JSON.stringify(LudexContract.ABI.SellerRegistry)}`);
-
     let slaves = [
         new RelaySlave(
             Address.create(ludexConfig.storeAddress),
