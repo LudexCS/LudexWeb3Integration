@@ -66,7 +66,19 @@ export class ReadonlyAdapterPriceTable<
     }
 
     public async getPriceInfoList(itemID: bigint): Promise<PriceInfo[]> {
-        return await this.contract.getPriceInfoList(itemID);
+        const infoListRaw: Array<{token: string; tokenAmount: bigint}> = await 
+            this.contract.getPriceInfoList(itemID);
+
+        const result: PriceInfo[] = [];
+        for (let i = 0; i < infoListRaw.length; i++)
+        {
+            const token = 
+            result.push({
+                token: Address.create(infoListRaw[i].token),
+                tokenAmount: infoListRaw[i].tokenAmount});
+        }
+        
+        return result;
     }   
 
     public async getExchangeRateOf(token: Address): Promise<bigint> {
