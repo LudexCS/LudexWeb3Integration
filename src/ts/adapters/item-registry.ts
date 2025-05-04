@@ -40,8 +40,9 @@ export interface IItemRegistryServiceAccess
         itemName: string, 
         seller: Address, 
         parents: Array<bigint>,
-        usdPrice: bigint
-    ): Promise<bigint>;
+        usdPrice: bigint,
+        shares: Array<[bigint, number]>
+    ): Promise<[bigint, Array<bigint>]>;
 }
 
 export class ReadonlyAdapterItemRegistry<
@@ -164,18 +165,41 @@ export class ServiceAdapterItemRegistry
         itemName: string, 
         seller: Address, 
         parents: Array<bigint>,
-        usdPrice: bigint
-    ): Promise<bigint>
-    {return await this.callAndParseLog(
-        await this.contract.registerItem(
-            itemName, 
-            seller.stringValue, 
-            parents,
-            usdPrice),
-        "ItemRegistered",
-        (itemName: string, seller: string, itemID: bigint) => {
+        usdPrice: bigint,
+        shares: Array<[bigint, number]>
+    ): Promise<[bigint, Array<bigint>]>
+    {
+        function onItemRegistred(
+            itemName: string,
+            seller: string,
+            itemID: bigint,
+            price: bigint,
+            shareIDs: Array<bigint>
+        ): [bigint, Array<bigint>]
+        {
             console.log(`New item registered: ${itemName} by ${seller}`);
-            return itemID;
+            return [itemID, shareIDs];
         }
-    )}
+
+        const shareTermIDs: bigint[] = [];
+        const shareRatios: number[] = [];
+
+        for (let i = 0; i < shares.length; i ++)
+        {
+            const [term, ratio] = shares[i];
+            shareTermIDs.push(term);
+            shareRatios.push(ratio);
+        }
+
+        return await this.callAndParseLog(
+            await this.contract.registerItem(
+                itemName, 
+                seller.stringValue, 
+                parents,
+                usdPrice,
+                shareTermIDs,
+                shareRatios),
+            "ItemRegistered",
+            onItemRegistred);
+    }
 }
