@@ -17,6 +17,9 @@ export interface IItemRegistryReadonlyAccess
 
     timestampRegistered(itemID: bigint)
     : Promise<Date>;
+
+    getNameHash(itemName: string)
+    : Promise<string>;
 }
 
 export interface IItemRegistryMetaTXAccess 
@@ -118,6 +121,11 @@ export class ReadonlyAdapterItemRegistry<
         .then(unixTime => new Date(unixTime * 1000)));
     }
 
+    public async getNameHash(itemName: string)
+    : Promise<bigint> 
+    {return await(
+        this.contract.getNameHash(itemName));
+    }
 };
 
 export class AdminAdapterItemRegistry
