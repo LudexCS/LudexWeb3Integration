@@ -122,7 +122,7 @@ export class ReadonlyAdapterItemRegistry<
     }
 
     public async getNameHash(itemName: string)
-    : Promise<bigint> 
+    : Promise<string> 
     {return await(
         this.contract.getNameHash(itemName));
     }
