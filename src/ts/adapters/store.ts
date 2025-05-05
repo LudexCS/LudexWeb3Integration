@@ -33,7 +33,10 @@ export class MetaTXAdapterStore
    {
       let tokenAddress = token.stringValue;
       let tokenContract = 
-         new ethers.Contract(tokenAddress, LudexContract.ABI.ERC20Permit);
+         new ethers.Contract(
+            tokenAddress, 
+            LudexContract.ABI.ERC20Permit,
+            this.component.runner);
       let domain:EIP712.Domain = await EIP712.getDomainOfContract(tokenContract);
       
       let userAddress = await this.component.runner.getAddress();
