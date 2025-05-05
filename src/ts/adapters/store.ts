@@ -41,6 +41,8 @@ export class MetaTXAdapterStore
       
       let userAddress = await this.component.runner.getAddress();
 
+      let payment = await this.contract.paymentProcessor();
+
       let erc20PermitNonce = await tokenContract.nonces(userAddress);
 
       let types = {
@@ -55,7 +57,7 @@ export class MetaTXAdapterStore
 
       let value = {
             owner: userAddress,
-            spender: this.contractAddress.stringValue,
+            spender: payment,
             value: MaxUint256,
             nonce: erc20PermitNonce,
             deadline: BigInt(Math.floor(Date.now() / 1000)) + deadline
