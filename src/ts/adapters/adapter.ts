@@ -85,7 +85,7 @@ export abstract class Adapter<
    U extends AdapterComponent<T>
 >{
    protected readonly component: U;
-   protected readonly contract: ethers.Contract;
+   protected readonly contractFactory: () => ethers.Contract;
    protected readonly contractAddress: Address;
    private txTimeOut: number;
    private eventTimeout: number;
@@ -99,10 +99,15 @@ export abstract class Adapter<
    {
       this.component = component;
       this.contractAddress = contractAddress;
-      this.contract = 
+      this.contractFactory = () => 
          new ethers.Contract(contractAddress.stringValue, abi, component.runner);
       this.txTimeOut = txTimeout;
       this.eventTimeout = eventTimeout;
+   }
+
+   public get contract(): ethers.Contract 
+   {
+      return this.contractFactory();
    }
 
    protected async callAndParseLog<V>(
