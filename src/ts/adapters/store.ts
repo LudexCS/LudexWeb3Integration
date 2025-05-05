@@ -58,7 +58,7 @@ export class MetaTXAdapterStore
             spender: this.contractAddress.stringValue,
             value: MaxUint256,
             nonce: erc20PermitNonce,
-            deadline: deadline
+            deadline: BigInt(Math.floor(Date.now() / 1000)) + deadline
          };
 
       let signature = 
