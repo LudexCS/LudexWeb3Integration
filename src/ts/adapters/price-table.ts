@@ -77,7 +77,7 @@ export class ReadonlyAdapterPriceTable<
                 token: Address.create(infoListRaw[i].token),
                 tokenAmount: infoListRaw[i].tokenAmount});
         }
-        
+
         return result;
     }   
 
@@ -136,7 +136,7 @@ export class MetaTXAdapterPriceTable
             this.component.createForwarderRequest(
                 this.contractAddress,
                 this.contract.interface,
-                "startDiscount", [itemID, usdPrice, endTime.getTime() / 1000],
+                "startDiscount", [itemID, usdPrice, BigInt(endTime.getTime() / 1000)],
                 deadline,
                 "DiscountStarted",
                 (_) => {}));
