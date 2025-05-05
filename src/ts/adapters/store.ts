@@ -41,7 +41,7 @@ export class MetaTXAdapterStore
       
       let userAddress = await this.component.runner.getAddress();
 
-      let payment = await this.contract.paymentProcessor();
+      let payment = await this.contract.payment();
 
       let erc20PermitNonce = await tokenContract.nonces(userAddress);
 
