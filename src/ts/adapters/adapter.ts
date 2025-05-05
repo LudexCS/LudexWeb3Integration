@@ -1,6 +1,7 @@
 import { ethers, Contract, Signer } from 'ethers';
 import { Address } from '../address';
 import { RelayRequest } from '../relayer/relay-request';
+import { decodeRelayResult, EncodedRelayResult } from '../relayer/relay-serialization';
 import { ERC2771 } from '../utils/erc2771';
 import { EIP712 } from '../utils/eip712';
 import { PriceInfo, Purchase } from '../contract-defined-types';
@@ -37,7 +38,7 @@ export class MetaTXAdapterComponent
       params: ReadonlyArray<any>,
       deadline: bigint,
       responseEvent: string,
-      onResponseFunctionFunction: (...args: any) => T
+      onResponseFunction: (...args: any[]) => T
    ): Promise<RelayRequest<T>>
    {
       let forwarderDomain = await EIP712.getDomainOfContract(this.forwarder);
@@ -64,11 +65,17 @@ export class MetaTXAdapterComponent
                ERC2771.ForwardRequestTypeDef,
                forwarderRequest));
       
+      let onResponseFunctionWithDecode = 
+         (encodedResults: EncodedRelayResult[]) => {
+            let args = encodedResults.map(decodeRelayResult);
+            return onResponseFunction(...args);
+         };
+
       return {
          request: forwarderRequest,
          signature: signature,
          responseEvent: responseEvent,
-         onResponse: onResponseFunctionFunction
+         onResponse: onResponseFunctionWithDecode
       };
    }
 }

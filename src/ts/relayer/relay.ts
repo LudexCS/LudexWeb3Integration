@@ -1,8 +1,8 @@
-import { 
-    RelayRequest, 
+import { RelayRequest } from "./relay-request";
+import {
     serializeRelayRequest,
     deserializeRelayRequest
-} from "./relay-request";
+} from "./relay-serialization";
 import { RelaySlave } from "./relay-slave";
 import { RelayMaster, createLudexRelayMaster } from "./relayer-master";
 

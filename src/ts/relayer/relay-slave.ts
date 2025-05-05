@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import { Address } from "../address";
+import { encodeRelayResult, EncodedRelayResult } from "./relay-serialization";
 
 export class RelaySlave {
     private readonly contract: ethers.Contract;
@@ -40,7 +41,7 @@ export class RelaySlave {
             log.topics
         );
 
-        sendResponse([...decodedArgs]);
+        sendResponse([...decodedArgs].map(encodeRelayResult));
         return true;
     }
 }
