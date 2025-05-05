@@ -6,6 +6,13 @@ export class RelaySlave {
 
     public constructor(contractAddress: Address, abi: any, signer: ethers.Signer) {
         this.contract = new ethers.Contract(contractAddress.stringValue, abi, signer);
+        const eventNames = [];
+        for(const eventName of Object.keys(this.contract.filters))
+        {
+            eventNames.push(eventName);
+        }
+        console.log(
+            "Slave filtering events: \n" + JSON.stringify(eventNames, null, 't'));
     }
 
     public async queryAndParseLog(
