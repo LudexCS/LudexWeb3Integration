@@ -15,25 +15,25 @@ export class RelaySlave {
         sendResponse: (response: any) => void
     ): Promise<boolean> 
     {
+        let log;
         try {
             const filter = this.contract.filters[eventName]?.();
             if (!filter) return false;
 
             const logs = await this.contract.queryFilter(filter, blockNumber, blockNumber);
-            const log = logs.find(log => log.transactionHash === txHash);
+            log = logs.find(log => log.transactionHash === txHash);
             if (!log) return false;
-
-            const decodedArgs = this.contract.interface.decodeEventLog(
-                eventName,
-                log.data,
-                log.topics
-            );
-
-            sendResponse([...decodedArgs]);
-            return true;
-
         } catch {
             return false;
         }
+    
+        const decodedArgs = this.contract.interface.decodeEventLog(
+            eventName,
+            log.data,
+            log.topics
+        );
+
+        sendResponse([...decodedArgs]);
+        return true;
     }
 }
