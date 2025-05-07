@@ -9,7 +9,7 @@ import { Web3Error } from "../error";
 export interface IPaymentProcessorMetaTXAccess
 {
    getEscrowBalance(token: Address)
-   : Promise<RelayRequest<bigint>>;
+   : Promise<bigint>;
 
    claimRequest(deadline: bigint)
    : Promise<RelayRequest<bigint>>;
@@ -34,7 +34,7 @@ export class MetaTXAdapterPaymentProcessor
    }
 
    public async getEscrowBalance(token: Address)
-   : Promise<RelayRequest<bigint>> 
+   : Promise<bigint> 
    {
       let provider = this.component.runner.provider;
 
