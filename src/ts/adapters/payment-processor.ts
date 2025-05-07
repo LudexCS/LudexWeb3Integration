@@ -11,7 +11,7 @@ export interface IPaymentProcessorMetaTXAccess
    getEscrowBalance(token: Address)
    : Promise<bigint>;
 
-   claimRequest(deadline: bigint)
+   claimRequest(token:Address, deadline: bigint)
    : Promise<RelayRequest<bigint>>;
 }
 
@@ -48,7 +48,7 @@ export class MetaTXAdapterPaymentProcessor
       return await readonlyContract.sellerTokenEscrow(seller, token.stringValue);
    }
 
-   public async claimRequest(deadline: bigint)
+   public async claimRequest(token:Address, deadline: bigint)
    : Promise<RelayRequest<bigint>> 
    {
       let onResponseFunction =
@@ -61,7 +61,7 @@ export class MetaTXAdapterPaymentProcessor
          this.component.createForwarderRequest(
             this.contractAddress,
             this.contract.interface,
-            "claim", [],
+            "claim", [token.stringValue],
             deadline,
             "ProfitClaimed",
             onResponseFunction
