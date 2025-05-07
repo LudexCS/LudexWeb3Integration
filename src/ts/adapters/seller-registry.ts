@@ -4,6 +4,7 @@ import { LudexContract } from "ludex-contracts";
 import { RelayRequest } from "../relayer/relay-request";
 import { Adapter, AdapterComponent, MetaTXAdapterComponent } from "./adapter";
 import { LudexConfig } from "../configs";
+import { Web3Error } from "../error";
 
 export interface ISellerRegistryReadonlyAccess
 {
@@ -47,6 +48,12 @@ export class ReadonlyAdapterSellerRegistry<
 {
     public constructor (config: LudexConfig, component: U)
     {
+        if (!config.sellerRegistryAddress)
+        {
+            throw new Web3Error(
+                "Address of SellerRegistry not configured");
+        }
+
         super(
             Address.create(config.sellerRegistryAddress),
             LudexContract.ABI.SellerRegistry,

@@ -5,6 +5,7 @@ import { Address } from "../address";
 import { RelayRequest } from "../relayer/relay-request";
 import { PriceInfo } from "../contract-defined-types";
 import { LudexConfig } from "../configs";
+import { Web3Error } from "../error";
 
 export interface IPriceTableReadOnlyAccess
 {
@@ -55,6 +56,12 @@ export class ReadonlyAdapterPriceTable<
 {
     public constructor (config: LudexConfig, component: U)
     {
+        if (!config.priceTableAddress)
+        {
+            throw new Web3Error(
+                "Address of PriceTable not configured");
+        }
+
         super(
             Address.create(config.priceTableAddress),
             LudexContract.ABI.PriceTable, 

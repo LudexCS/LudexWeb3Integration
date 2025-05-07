@@ -3,6 +3,7 @@ import { Adapter, AdapterComponent, MetaTXAdapterComponent, AdminAdapterComponen
 import { LudexContract } from "ludex-contracts";
 import { Address } from "../address";
 import { LudexConfig } from "../configs";
+import { Web3Error } from "../error";
 
 export interface IItemRegistryReadonlyAccess
 {
@@ -59,6 +60,12 @@ export class ReadonlyAdapterItemRegistry<
         config: LudexConfig,
         component: U
     ){
+        if (!config.itemRegistryAddress)
+        {
+            throw new Web3Error(
+                "Address of ItemRegistry not configured");
+        }
+
         super(
             Address.create(config.itemRegistryAddress),
             LudexContract.ABI.ItemRegistry,

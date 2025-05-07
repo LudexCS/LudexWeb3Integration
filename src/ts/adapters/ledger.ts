@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { Web3Error } from "../error";
 import { LudexContract } from "ludex-contracts";
 import { Adapter, AdapterComponent, MetaTXAdapterComponent, AdminAdapterComponent } from "./adapter";
 import { Address } from "../address";
@@ -43,6 +44,12 @@ export class ReadonlyAdapterLedger<
         config: LudexConfig,
         component: U
     ){
+        if (!config.ledgerAddress)
+        {
+            throw new Web3Error(
+                "Address of Ledger not configured");
+        }
+
         super(
             Address.create(config.ledgerAddress),
             LudexContract.ABI.Ledger,

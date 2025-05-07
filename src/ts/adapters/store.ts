@@ -5,6 +5,7 @@ import { Address } from '../address';
 import { RelayRequest } from '../relayer/relay-request';
 import { EIP712 } from '../utils/eip712';
 import { LudexConfig } from '../configs';
+import { Web3Error } from '../error';
 
 export interface IStoreMetaTXAccess
 {
@@ -21,6 +22,12 @@ export class MetaTXAdapterStore
       config: LudexConfig,
       component: MetaTXAdapterComponent
    ){
+      if (!config.storeAddress)
+      {
+         throw new Web3Error(
+            "Address of Store not configured");
+      }
+
       super(
          Address.create(config.storeAddress),
          LudexContract.ABI.Store,

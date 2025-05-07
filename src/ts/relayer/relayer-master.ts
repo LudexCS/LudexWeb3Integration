@@ -145,28 +145,54 @@ export function createLudexRelayMaster(
     ludexConfig: LudexConfig, forwarderAddress: Address, signer: ethers.Signer
 ): RelayMaster
 {
-    let slaves = [
-        new RelaySlave(
-            Address.create(ludexConfig.storeAddress),
-            LudexContract.ABI.Store,
-            signer),
-        new RelaySlave(
-            Address.create(ludexConfig.priceTableAddress),
-            LudexContract.ABI.PriceTable,
-            signer),
-        new RelaySlave(
-            Address.create(ludexConfig.ledgerAddress),
-            LudexContract.ABI.Ledger,
-            signer),
-        new RelaySlave(
+    let slaves: Array<RelaySlave> = [];
+
+    if (ludexConfig.sellerRegistryAddress)
+    {
+        slaves.push(new RelaySlave(
             Address.create(ludexConfig.sellerRegistryAddress),
             LudexContract.ABI.SellerRegistry,
-            signer),
-        new RelaySlave(
+            signer));
+    }
+    if (ludexConfig.itemRegistryAddress)
+    {
+        slaves.push(new RelaySlave(
             Address.create(ludexConfig.itemRegistryAddress),
             LudexContract.ABI.ItemRegistry,
-            signer),
-    ]
+            signer));
+    }
+    if (ludexConfig.ledgerAddress)
+    {
+        slaves.push(new RelaySlave(
+            Address.create(ludexConfig.ledgerAddress),
+            LudexContract.ABI.Ledger,
+            signer));
+    }
+    if (ludexConfig.priceTableAddress)
+    {
+        slaves.push(new RelaySlave(
+            Address.create(ludexConfig.priceTableAddress),
+            LudexContract.ABI.PriceTable,
+            signer));
+    }
+    if (ludexConfig.paymentProcessorAddress)
+    {
+        slaves.push(new RelaySlave(
+            Address.create(ludexConfig.paymentProcessorAddress),
+            LudexContract.ABI.PaymentProcessor,
+            signer));
+    }
+    if (ludexConfig.storeAddress)
+    {
+        slaves.push(new RelaySlave(
+            Address.create(ludexConfig.storeAddress),
+            LudexContract.ABI.Store,
+            signer));
+    }
+
+    if (slaves.length == 0)
+        throw new Web3Error(
+            "No RelaySlave generated from LudexConfig");
 
     return new RelayMaster(forwarderAddress, slaves, signer);
 }

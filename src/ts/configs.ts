@@ -11,9 +11,10 @@ export type ChainConfig = {
 };
 
 export type LudexConfig = {
-    storeAddress: string;
-    priceTableAddress: string;
-    ledgerAddress: string;
-    sellerRegistryAddress: string;
-    itemRegistryAddress: string;
+    storeAddress?: string;
+    priceTableAddress?: string;
+    ledgerAddress?: string;
+    sellerRegistryAddress?: string;
+    itemRegistryAddress?: string;
+    paymentProcessorAddress?: string;
 };

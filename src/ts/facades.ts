@@ -9,7 +9,8 @@ import { BrowserWalletConnection } from "./browser-wallet-connection";
 import { IStoreMetaTXAccess, MetaTXAdapterStore } from "./adapters/store";
 import { Web3Error } from "./error";
 import { Address } from "./address";
-import { LudexContract} from "ludex-contracts"
+import { LudexContract} from "ludex-contracts";
+import { IPaymentProcessorMetaTXAccess, MetaTXAdapterPaymentProcessor } from "./adapters/paymentProcessor";
 
 export interface IReadonlyFacade
 {
@@ -26,6 +27,7 @@ export interface IMetaTXFacade extends IReadonlyFacade
     metaTXAccessSellerRegistry(): ISellerRegistryMetaTXAccess;
     metaTXAccessItemRegistry(): IItemRegistryMetaTXAccess;
     metaTXAccessStore(): IStoreMetaTXAccess;
+    metaTXAccessPaymentProcessor(): IPaymentProcessorMetaTXAccess;
 }
 
 export interface IAdminFacade extends IReadonlyFacade
@@ -104,6 +106,7 @@ export abstract class MetaTXFacade<
     public abstract metaTXAccessSellerRegistry(): ISellerRegistryMetaTXAccess;
     public abstract metaTXAccessItemRegistry(): IItemRegistryMetaTXAccess;
     public abstract metaTXAccessStore(): IStoreMetaTXAccess;
+    public abstract metaTXAccessPaymentProcessor(): IPaymentProcessorMetaTXAccess;
 }
 
 export class Web2UserFacade
@@ -140,6 +143,12 @@ export class Web3UserFacade
     public metaTXAccessStore(): IStoreMetaTXAccess 
     {return (
         new MetaTXAdapterStore(this.ludexConfig, this.component));
+    }
+
+    public metaTXAccessPaymentProcessor()
+    : IPaymentProcessorMetaTXAccess 
+    {return (
+        new MetaTXAdapterPaymentProcessor(this.ludexConfig, this.component));
     }
 }
 
