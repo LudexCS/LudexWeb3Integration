@@ -63,7 +63,7 @@ import {
 } from "./ts/adapters/seller-registry";
 import {
     IPaymentProcessorMetaTXAccess
-} from "./ts/adapters/paymentProcessor";
+} from "./ts/adapters/payment-processor";
 
 export namespace Access {
     export namespace Readonly {

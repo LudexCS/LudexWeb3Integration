@@ -10,7 +10,7 @@ import { IStoreMetaTXAccess, MetaTXAdapterStore } from "./adapters/store";
 import { Web3Error } from "./error";
 import { Address } from "./address";
 import { LudexContract} from "ludex-contracts";
-import { IPaymentProcessorMetaTXAccess, MetaTXAdapterPaymentProcessor } from "./adapters/paymentProcessor";
+import { IPaymentProcessorMetaTXAccess, MetaTXAdapterPaymentProcessor } from "./adapters/payment-processor";
 
 export interface IReadonlyFacade
 {

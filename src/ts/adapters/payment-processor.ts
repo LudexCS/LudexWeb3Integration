@@ -6,9 +6,11 @@ import { LudexConfig } from "../configs";
 import { RelayRequest } from "../relayer/relay-request";
 import { Web3Error } from "../error";
 
-
 export interface IPaymentProcessorMetaTXAccess
 {
+   getEscrowBalance(token: Address)
+   : Promise<RelayRequest<bigint>>;
+
    claimRequest(deadline: bigint)
    : Promise<RelayRequest<bigint>>;
 }
@@ -29,6 +31,21 @@ export class MetaTXAdapterPaymentProcessor
          Address.create(config.paymentProcessorAddress),
          LudexContract.ABI.PaymentProcessor,
          component);
+   }
+
+   public async getEscrowBalance(token: Address)
+   : Promise<RelayRequest<bigint>> 
+   {
+      let provider = this.component.runner.provider;
+
+      let seller = await this.component.runner.getAddress();
+      let readonlyContract = 
+         new ethers.Contract(
+            this.contractAddress.stringValue,
+            this.contract.interface,
+            provider);
+      
+      return await readonlyContract.sellerTokenEscrow(seller, token.stringValue);
    }
 
    public async claimRequest(deadline: bigint)
