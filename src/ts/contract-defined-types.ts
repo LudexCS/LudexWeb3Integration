@@ -9,5 +9,5 @@ export type Purchase = {
     tokenID:  bigint;
     itemID: bigint;
     buyer: Address;
-    timestamp: bigint;
+    timestamp: Date;
 }

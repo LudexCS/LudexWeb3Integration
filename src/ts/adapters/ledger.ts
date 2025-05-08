@@ -91,9 +91,16 @@ export class ReadonlyAdapterLedger<
         return ownerAddress === buyer;
     }
 
-    // TODO: Getting Purchase Info from tokenID, should add feature in Ledger.sol
     public async getPurchaseInfo(tokenID: bigint): Promise<Purchase> {
-        throw new Error("Not implemented yet");
+        let [_, rawItemID, rawBuyer, rawTimestamp] = 
+            await this.contract.purchases(tokenID);
+        
+        return {
+            tokenID: tokenID,
+            itemID: BigInt(rawItemID),
+            buyer: Address.create(rawBuyer),
+            timestamp: new Date(Number(rawTimestamp))
+        };
     }
 }
 
