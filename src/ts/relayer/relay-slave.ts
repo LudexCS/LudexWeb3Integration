@@ -12,8 +12,6 @@ export class RelaySlave {
         {
             eventNames.push(eventName);
         }
-        console.log(
-            "Slave filtering events: \n" + JSON.stringify(eventNames, null, 't'));
     }
 
     public async queryAndParseLog(
