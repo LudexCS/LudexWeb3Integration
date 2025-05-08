@@ -86,9 +86,9 @@ export class ReadonlyAdapterLedger<
         tokenID: bigint
     ): Promise<boolean>
     {
-        let ownerAddress = await this.nftContract.ownerOf(tokenID);
+        let ownerAddress = await this.nftContract.ownerOf(tokenID) as string;
 
-        return ownerAddress === buyer;
+        return ownerAddress.toLowerCase() === buyer.stringValue.toLowerCase();
     }
 
     public async getPurchaseInfo(tokenID: bigint): Promise<Purchase> {
