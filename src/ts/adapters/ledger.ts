@@ -99,7 +99,7 @@ export class ReadonlyAdapterLedger<
             tokenID: tokenID,
             itemID: BigInt(rawItemID),
             buyer: Address.create(rawBuyer),
-            timestamp: new Date(Number(rawTimestamp))
+            timestamp: new Date(Number(rawTimestamp) * 1000)
         };
     }
 }
