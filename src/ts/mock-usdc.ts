@@ -15,3 +15,17 @@ export async function giveawayUSDC (
     
     await mockUSDC.giveaway(to.stringValue);
 }
+
+export async function balanceOfUSDC(
+    contractAddress: Address,
+    of: Address,
+    provider: ethers.Provider
+): Promise<bigint>
+{
+    const mockUSDC = 
+        LudexContract.Factory.MockUSDC.connect(
+            contractAddress.stringValue,
+            provider);
+
+    return await mockUSDC.balanceOf(of.stringValue);
+}
