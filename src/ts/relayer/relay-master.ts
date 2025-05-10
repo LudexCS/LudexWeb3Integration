@@ -142,9 +142,14 @@ export class RelayMaster
 }
 
 export function createLudexRelayMaster(
-    ludexConfig: LudexConfig, forwarderAddress: Address, signer: ethers.Signer
+    ludexConfig: LudexConfig, signer: ethers.Signer
 ): RelayMaster
 {
+    if (!ludexConfig.forwarderAddress)
+    {
+        throw new Web3Error("No forwarder address configured");
+    }
+
     let slaves: Array<RelaySlave> = [];
 
     if (ludexConfig.sellerRegistryAddress)
@@ -194,5 +199,8 @@ export function createLudexRelayMaster(
         throw new Web3Error(
             "No RelaySlave generated from LudexConfig");
 
-    return new RelayMaster(forwarderAddress, slaves, signer);
+    return new RelayMaster(
+        Address.create(ludexConfig.forwarderAddress), 
+        slaves, 
+        signer);
 }

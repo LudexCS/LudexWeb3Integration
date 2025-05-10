@@ -230,10 +230,16 @@ export function createWeb2UserFacade(
 export function createWeb3UserFacade(
     chainConfig: ChainConfig,
     ludexConfig: LudexConfig,
-    signer: ethers.Signer,
-    forwarderAddress: Address
+    signer: ethers.Signer
 ): Web3UserFacade
 {
+    if (!ludexConfig.forwarderAddress)
+    {
+        throw new Web3Error("Address of forwarder not in ludexConfig");
+    }
+
+    let forwarderAddress = Address.create(ludexConfig.forwarderAddress);
+
     let component = 
         new MetaTXAdapterComponent(
             signer, 

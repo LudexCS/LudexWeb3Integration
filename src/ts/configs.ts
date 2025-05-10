@@ -17,4 +17,5 @@ export type LudexConfig = {
     sellerRegistryAddress?: string;
     itemRegistryAddress?: string;
     paymentProcessorAddress?: string;
+    forwarderAddress?: string;
 };
