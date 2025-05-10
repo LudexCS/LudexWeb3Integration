@@ -32,6 +32,10 @@ import { ERC2771 } from "./ts/utils/erc2771";
 
 export { ERC2771 };
 
+import { giveawayUSDC } from "./ts/mock-usdc";
+
+export { giveawayUSDC };
+
 import * as relay from "./ts/relayer/relay";
 
 export { relay };
