@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { LudexContract } from "ludex-contracts/*";
+import { LudexContract } from "ludex-contracts";
 import { Address } from "./address";
 
 export async function giveawayUSDC (
@@ -13,5 +13,5 @@ export async function giveawayUSDC (
             contractAddress.stringValue,
             signer);
     
-    mockUSDC.giveaway(to.stringValue);
+    await mockUSDC.giveaway(to.stringValue);
 }
