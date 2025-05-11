@@ -1,0 +1,12 @@
+import { Address } from "./address";
+export type PriceInfo = {
+    token: Address;
+    tokenAmount: bigint;
+};
+export type Purchase = {
+    tokenID: bigint;
+    itemID: bigint;
+    buyer: Address;
+    timestamp: Date;
+};
+//# sourceMappingURL=contract-defined-types.d.ts.map
