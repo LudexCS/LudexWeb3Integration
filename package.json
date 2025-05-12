@@ -30,6 +30,6 @@
   },
   "dependencies": {
     "ethers": "^6.13.5",
-    "ludex-contracts": "github:LudexCS/LudexSmartContracts"
+    "ludex-contracts": "github:LudexCS/LudexSmartContracts#fixDecimalIssue"
   }
 }
