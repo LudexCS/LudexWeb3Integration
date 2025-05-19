@@ -67,7 +67,7 @@ class Adapter {
     get contract() {
         return this.contractFactory();
     }
-    callAndParseLog(tx, eventName, onEmit) {
+    callAndParseLog(tx, eventName, onEmit, filteringContract) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b;
             const receipt = yield Promise.race([
@@ -77,7 +77,8 @@ class Adapter {
             if (!receipt) {
                 throw new error_1.EthereumError("Transaction failed");
             }
-            const logs = yield this.contract.queryFilter((_b = (_a = this.contract.filters)[eventName]) === null || _b === void 0 ? void 0 : _b.call(_a), receipt.blockNumber, receipt.blockNumber);
+            const contract = filteringContract !== null && filteringContract !== void 0 ? filteringContract : this.contract;
+            const logs = yield contract.queryFilter((_b = (_a = this.contract.filters)[eventName]) === null || _b === void 0 ? void 0 : _b.call(_a), receipt.blockNumber, receipt.blockNumber);
             const log = logs.find(log => log.transactionHash === tx.hash);
             if (!log) {
                 throw new error_1.EthereumError(`'${eventName}' not found in transaction logs`);

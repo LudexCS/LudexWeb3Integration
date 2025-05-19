@@ -8,6 +8,7 @@ export interface IStoreMetaTXAccess {
 }
 export declare class MetaTXAdapterStore extends Adapter<ethers.Signer, MetaTXAdapterComponent> implements IStoreMetaTXAccess {
     constructor(config: LudexConfig, component: MetaTXAdapterComponent);
+    private permissionSignature;
     purchaseItemRequest(itemID: bigint, token: Address, deadline: bigint): Promise<RelayRequest<bigint>>;
 }
 //# sourceMappingURL=store.d.ts.map

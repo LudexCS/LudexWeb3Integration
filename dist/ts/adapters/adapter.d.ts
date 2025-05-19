@@ -18,7 +18,7 @@ export declare abstract class Adapter<T extends ethers.ContractRunner, U extends
     private eventTimeout;
     constructor(contractAddress: Address, abi: any, component: U, txTimeout?: number, eventTimeout?: number);
     get contract(): ethers.Contract;
-    protected callAndParseLog<V>(tx: ethers.TransactionResponse, eventName: string, onEmit: (...args: any[]) => V): Promise<V>;
+    protected callAndParseLog<V>(tx: ethers.TransactionResponse, eventName: string, onEmit: (...args: any[]) => V, filteringContract?: ethers.Contract): Promise<V>;
 }
 export type UserAdapterComponent = AdapterComponent<ethers.ContractRunner>;
 export type AdminAdapterComponent = AdapterComponent<ethers.Signer>;

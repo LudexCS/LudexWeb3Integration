@@ -34,9 +34,8 @@ export class MetaTXAdapterStore
          component);
    }
 
-   public async purchaseItemRequest(
-      itemID: bigint, token: Address, deadline: bigint)
-   : Promise<RelayRequest<bigint>>
+   private async permissionSignature(token: Address, deadline: bigint)
+   : Promise<[bigint, ethers.Signature]>
    {
       let tokenAddress = token.stringValue;
       let tokenContract = 
@@ -73,16 +72,37 @@ export class MetaTXAdapterStore
       let signature = 
          await this.component.runner.signTypedData(domain, types, value);
 
-      let { v, r, s } = ethers.Signature.from(signature);
+      return [value.deadline, ethers.Signature.from(signature)];
+   }
 
+   public async purchaseItemRequest(
+      itemID: bigint, token: Address, deadline: bigint)
+   : Promise<RelayRequest<bigint>>
+   {
       let onResponseFunction = 
          (itemID: bigint, buyer: string, tokenID: bigint) => tokenID;
+
+      if (await this.contract.isTokenPermitted(token.stringValue))
+      {
+         return await (
+            this.component.createForwarderRequest(
+               this.contractAddress,
+               this.contract.interface,
+               "purchaseItem", [itemID, token.stringValue],
+               deadline,
+               "ItemPurchased",
+               onResponseFunction));
+      }
+
+      let [purchaseDeadline, signature] = 
+         await this.permissionSignature(token, deadline);
+      let { v, r, s } = signature;
 
       return await (
          this.component.createForwarderRequest(
             this.contractAddress,
             this.contract.interface,
-            "purchaseItem", [itemID, token.stringValue, value.deadline, v, r, s],
+            "purchaseItem", [itemID, token.stringValue, purchaseDeadline, v, r, s],
             deadline,
             "ItemPurchased",
             onResponseFunction));

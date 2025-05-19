@@ -8,6 +8,6 @@ export type PriceInfo = {
 export type Purchase = {
     tokenID:  bigint;
     itemID: bigint;
-    buyer: Address;
+    buyer: Address | bigint;
     timestamp: Date;
 }

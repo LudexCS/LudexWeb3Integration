@@ -21,12 +21,17 @@ import { ILedgerReadonlyAccess, ILedgerMetaTXAccess, ILedgerAdminAccess, ILedger
 import { IPriceTableReadOnlyAccess, IPriceTableMetaTXAccess, IPriceTableAdminAccess, IPriceTableServiceAccess } from "./ts/adapters/price-table";
 import { IItemRegistryReadonlyAccess, IItemRegistryMetaTXAccess, IItemRegistryAdminAccess, IItemRegistryServiceAccess } from "./ts/adapters/item-registry";
 import { ISellerRegistryReadonlyAccess, ISellerRegistryMetaTXAccess, ISellerRegistryAdminAccess, ISellerRegistryServiceAccess } from "./ts/adapters/seller-registry";
+import { IProfitEscrowReadonlyAccess, IProfitEscrowMetaTXAccess } from "./ts/adapters/profit-escrow";
+import { ISellerProxyServiceAccess } from "./ts/adapters/seller-proxy";
+import { IPurchaseProxyReadonlyAccess, IPurchaseProxyServiceAccess } from "./ts/adapters/purchase-proxy";
 export declare namespace Access {
     namespace Readonly {
         type ILedger = ILedgerReadonlyAccess;
         type IPriceTable = IPriceTableReadOnlyAccess;
         type ISellerRegistry = ISellerRegistryReadonlyAccess;
         type IItemRegistry = IItemRegistryReadonlyAccess;
+        type IProfitEscrow = IProfitEscrowReadonlyAccess;
+        type IPurchaseProxy = IPurchaseProxyReadonlyAccess;
     }
     namespace MetaTX {
         type IStore = IStoreMetaTXAccess;
@@ -34,6 +39,7 @@ export declare namespace Access {
         type IPriceTable = IPriceTableMetaTXAccess;
         type ISellerRegistry = ISellerRegistryMetaTXAccess;
         type IItemRegistry = IItemRegistryMetaTXAccess;
+        type IProfitEscrow = IProfitEscrowMetaTXAccess;
     }
     namespace Admin {
         type ILedger = ILedgerAdminAccess;
@@ -46,6 +52,8 @@ export declare namespace Access {
         type IPriceTable = IPriceTableServiceAccess;
         type ISellerRegistry = ISellerRegistryServiceAccess;
         type IItemRegistry = IItemRegistryServiceAccess;
+        type ISellerProxy = ISellerProxyServiceAccess;
+        type IPurchaseProxy = IPurchaseProxyServiceAccess;
     }
 }
 import * as facade from "./ts/facades";

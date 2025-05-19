@@ -10,7 +10,9 @@ import { IStoreMetaTXAccess, MetaTXAdapterStore } from "./adapters/store";
 import { Web3Error } from "./error";
 import { Address } from "./address";
 import { LudexContract} from "ludex-contracts";
-import { IPaymentProcessorMetaTXAccess, MetaTXAdapterPaymentProcessor } from "./adapters/payment-processor";
+import { IProfitEscrowMetaTXAccess, IProfitEscrowReadonlyAccess, MetaTXAdapterProfitEscrow, ReadonlyAdapterProfitEscrow } from "./adapters/profit-escrow";
+import { IPurchaseProxyReadonlyAccess, IPurchaseProxyServiceAccess, ReadonlyAdapterPurchaseProxy, ServiceAdapterPurchaseProxy } from "./adapters/purchase-proxy";
+import { ISellerProxyServiceAccess, ServiceAdapterSellerProxy } from "./adapters/seller-proxy";
 
 export interface IReadonlyFacade
 {
@@ -18,6 +20,8 @@ export interface IReadonlyFacade
     readonlyAccessLedger(): ILedgerReadonlyAccess;
     readonlyAccessSellerRegistry(): ISellerRegistryReadonlyAccess;
     readonlyAccessItemRegistry(): IItemRegistryReadonlyAccess;
+    readonlyAccessProfitEscrow(): IProfitEscrowReadonlyAccess;
+    readonlyAccessPurchaseProxy(): IPurchaseProxyReadonlyAccess;
 }
 
 export interface IMetaTXFacade extends IReadonlyFacade
@@ -27,7 +31,7 @@ export interface IMetaTXFacade extends IReadonlyFacade
     metaTXAccessSellerRegistry(): ISellerRegistryMetaTXAccess;
     metaTXAccessItemRegistry(): IItemRegistryMetaTXAccess;
     metaTXAccessStore(): IStoreMetaTXAccess;
-    metaTXAccessPaymentProcessor(): IPaymentProcessorMetaTXAccess;
+    metaTXAcessProfitEscrow(): IProfitEscrowMetaTXAccess;
 }
 
 export interface IAdminFacade extends IReadonlyFacade
@@ -44,6 +48,8 @@ export interface IServiceFacade extends IAdminFacade
     serviceAccessLedger(): ILedgerServiceAccess;
     serviceAccessSellerRegistry(): ISellerRegistryServiceAccess;
     serviceAccessItemRegistry(): IItemRegistryServiceAccess;
+    serviceAccessSellerProxy(): ISellerProxyServiceAccess;
+    serviceAccessPurchaseProxy(): IPurchaseProxyServiceAccess;
 }
 
 export abstract class ReadonlyFacade<
@@ -92,6 +98,18 @@ export abstract class ReadonlyFacade<
         new ReadonlyAdapterItemRegistry<T, U>(
             this.ludexConfig, this.component));
     }
+
+    public readonlyAccessProfitEscrow(): IProfitEscrowReadonlyAccess 
+    {return (
+        new ReadonlyAdapterProfitEscrow<T, U>(
+            this.ludexConfig, this.component));
+    }
+
+    public readonlyAccessPurchaseProxy(): IPurchaseProxyReadonlyAccess 
+    {return (
+        new ReadonlyAdapterPurchaseProxy<T, U> (
+            this.ludexConfig, this.component));
+    }
 }
 
 export abstract class MetaTXFacade<
@@ -106,7 +124,7 @@ export abstract class MetaTXFacade<
     public abstract metaTXAccessSellerRegistry(): ISellerRegistryMetaTXAccess;
     public abstract metaTXAccessItemRegistry(): IItemRegistryMetaTXAccess;
     public abstract metaTXAccessStore(): IStoreMetaTXAccess;
-    public abstract metaTXAccessPaymentProcessor(): IPaymentProcessorMetaTXAccess;
+    public abstract metaTXAcessProfitEscrow(): IProfitEscrowMetaTXAccess;
 }
 
 export class Web2UserFacade
@@ -145,10 +163,9 @@ export class Web3UserFacade
         new MetaTXAdapterStore(this.ludexConfig, this.component));
     }
 
-    public metaTXAccessPaymentProcessor()
-    : IPaymentProcessorMetaTXAccess 
+    public metaTXAcessProfitEscrow(): IProfitEscrowMetaTXAccess 
     {return (
-        new MetaTXAdapterPaymentProcessor(this.ludexConfig, this.component));
+        new MetaTXAdapterProfitEscrow(this.ludexConfig, this.component));
     }
 }
 
@@ -210,6 +227,16 @@ export class ServiceFacade
     public serviceAccessItemRegistry(): ServiceAdapterItemRegistry 
     {return (
         new ServiceAdapterItemRegistry(this.ludexConfig, this.component));
+    }
+
+    public serviceAccessSellerProxy(): ISellerProxyServiceAccess 
+    {return (
+        new ServiceAdapterSellerProxy(this.ludexConfig, this.component));
+    }
+
+    public serviceAccessPurchaseProxy(): IPurchaseProxyServiceAccess 
+    {return (
+        new ServiceAdapterPurchaseProxy(this.ludexConfig, this.component));
     }
 }
 

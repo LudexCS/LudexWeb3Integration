@@ -16,6 +16,9 @@ export type LudexConfig = {
     ledgerAddress?: string;
     sellerRegistryAddress?: string;
     itemRegistryAddress?: string;
+    profitEscrowAddress?: string;
     paymentProcessorAddress?: string;
+    sellerProxyAddress?: string;
+    purchaseProxyAddress?: string;
     forwarderAddress?: string;
 };

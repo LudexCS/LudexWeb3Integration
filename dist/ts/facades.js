@@ -15,7 +15,9 @@ const store_1 = require("./adapters/store");
 const error_1 = require("./error");
 const address_1 = require("./address");
 const ludex_contracts_1 = require("ludex-contracts");
-const payment_processor_1 = require("./adapters/payment-processor");
+const profit_escrow_1 = require("./adapters/profit-escrow");
+const purchase_proxy_1 = require("./adapters/purchase-proxy");
+const seller_proxy_1 = require("./adapters/seller-proxy");
 class ReadonlyFacade {
     constructor(chainConfig, ludexConfig, runner, component) {
         this.chainConfig = chainConfig;
@@ -34,6 +36,12 @@ class ReadonlyFacade {
     }
     readonlyAccessItemRegistry() {
         return (new item_registry_1.ReadonlyAdapterItemRegistry(this.ludexConfig, this.component));
+    }
+    readonlyAccessProfitEscrow() {
+        return (new profit_escrow_1.ReadonlyAdapterProfitEscrow(this.ludexConfig, this.component));
+    }
+    readonlyAccessPurchaseProxy() {
+        return (new purchase_proxy_1.ReadonlyAdapterPurchaseProxy(this.ludexConfig, this.component));
     }
 }
 exports.ReadonlyFacade = ReadonlyFacade;
@@ -59,8 +67,8 @@ class Web3UserFacade extends MetaTXFacade {
     metaTXAccessStore() {
         return (new store_1.MetaTXAdapterStore(this.ludexConfig, this.component));
     }
-    metaTXAccessPaymentProcessor() {
-        return (new payment_processor_1.MetaTXAdapterPaymentProcessor(this.ludexConfig, this.component));
+    metaTXAcessProfitEscrow() {
+        return (new profit_escrow_1.MetaTXAdapterProfitEscrow(this.ludexConfig, this.component));
     }
 }
 exports.Web3UserFacade = Web3UserFacade;
@@ -91,6 +99,12 @@ class ServiceFacade extends AdminFacade {
     }
     serviceAccessItemRegistry() {
         return (new item_registry_1.ServiceAdapterItemRegistry(this.ludexConfig, this.component));
+    }
+    serviceAccessSellerProxy() {
+        return (new seller_proxy_1.ServiceAdapterSellerProxy(this.ludexConfig, this.component));
+    }
+    serviceAccessPurchaseProxy() {
+        return (new purchase_proxy_1.ServiceAdapterPurchaseProxy(this.ludexConfig, this.component));
     }
 }
 exports.ServiceFacade = ServiceFacade;

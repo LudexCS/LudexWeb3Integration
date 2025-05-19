@@ -6,12 +6,16 @@ import { ILedgerReadonlyAccess, ILedgerMetaTXAccess, ILedgerAdminAccess, ILedger
 import { ISellerRegistryReadonlyAccess, ISellerRegistryMetaTXAccess, ISellerRegistryAdminAccess, ISellerRegistryServiceAccess } from "./adapters/seller-registry";
 import { IItemRegistryReadonlyAccess, IItemRegistryMetaTXAccess, IItemRegistryAdminAccess, ServiceAdapterItemRegistry, IItemRegistryServiceAccess } from "./adapters/item-registry";
 import { IStoreMetaTXAccess } from "./adapters/store";
-import { IPaymentProcessorMetaTXAccess } from "./adapters/payment-processor";
+import { IProfitEscrowMetaTXAccess, IProfitEscrowReadonlyAccess } from "./adapters/profit-escrow";
+import { IPurchaseProxyReadonlyAccess, IPurchaseProxyServiceAccess } from "./adapters/purchase-proxy";
+import { ISellerProxyServiceAccess } from "./adapters/seller-proxy";
 export interface IReadonlyFacade {
     readonlyAccessPriceTable(): IPriceTableReadOnlyAccess;
     readonlyAccessLedger(): ILedgerReadonlyAccess;
     readonlyAccessSellerRegistry(): ISellerRegistryReadonlyAccess;
     readonlyAccessItemRegistry(): IItemRegistryReadonlyAccess;
+    readonlyAccessProfitEscrow(): IProfitEscrowReadonlyAccess;
+    readonlyAccessPurchaseProxy(): IPurchaseProxyReadonlyAccess;
 }
 export interface IMetaTXFacade extends IReadonlyFacade {
     metaTXAccessPriceTable(): IPriceTableMetaTXAccess;
@@ -19,7 +23,7 @@ export interface IMetaTXFacade extends IReadonlyFacade {
     metaTXAccessSellerRegistry(): ISellerRegistryMetaTXAccess;
     metaTXAccessItemRegistry(): IItemRegistryMetaTXAccess;
     metaTXAccessStore(): IStoreMetaTXAccess;
-    metaTXAccessPaymentProcessor(): IPaymentProcessorMetaTXAccess;
+    metaTXAcessProfitEscrow(): IProfitEscrowMetaTXAccess;
 }
 export interface IAdminFacade extends IReadonlyFacade {
     adminAccessPriceTable(): IPriceTableAdminAccess;
@@ -32,6 +36,8 @@ export interface IServiceFacade extends IAdminFacade {
     serviceAccessLedger(): ILedgerServiceAccess;
     serviceAccessSellerRegistry(): ISellerRegistryServiceAccess;
     serviceAccessItemRegistry(): IItemRegistryServiceAccess;
+    serviceAccessSellerProxy(): ISellerProxyServiceAccess;
+    serviceAccessPurchaseProxy(): IPurchaseProxyServiceAccess;
 }
 export declare abstract class ReadonlyFacade<T extends ethers.ContractRunner, U extends AdapterComponent<T>> implements IReadonlyFacade {
     protected readonly chainConfig: ChainConfig;
@@ -43,6 +49,8 @@ export declare abstract class ReadonlyFacade<T extends ethers.ContractRunner, U 
     readonlyAccessLedger(): ILedgerReadonlyAccess;
     readonlyAccessSellerRegistry(): ISellerRegistryReadonlyAccess;
     readonlyAccessItemRegistry(): IItemRegistryReadonlyAccess;
+    readonlyAccessProfitEscrow(): IProfitEscrowReadonlyAccess;
+    readonlyAccessPurchaseProxy(): IPurchaseProxyReadonlyAccess;
 }
 export declare abstract class MetaTXFacade<T extends ethers.ContractRunner, U extends AdapterComponent<T>> extends ReadonlyFacade<T, U> implements IMetaTXFacade {
     abstract metaTXAccessPriceTable(): IPriceTableMetaTXAccess;
@@ -50,7 +58,7 @@ export declare abstract class MetaTXFacade<T extends ethers.ContractRunner, U ex
     abstract metaTXAccessSellerRegistry(): ISellerRegistryMetaTXAccess;
     abstract metaTXAccessItemRegistry(): IItemRegistryMetaTXAccess;
     abstract metaTXAccessStore(): IStoreMetaTXAccess;
-    abstract metaTXAccessPaymentProcessor(): IPaymentProcessorMetaTXAccess;
+    abstract metaTXAcessProfitEscrow(): IProfitEscrowMetaTXAccess;
 }
 export declare class Web2UserFacade extends ReadonlyFacade<ethers.JsonRpcProvider, AdapterComponent<ethers.JsonRpcProvider>> {
 }
@@ -60,7 +68,7 @@ export declare class Web3UserFacade extends MetaTXFacade<ethers.Signer, MetaTXAd
     metaTXAccessSellerRegistry(): ISellerRegistryMetaTXAccess;
     metaTXAccessItemRegistry(): IItemRegistryMetaTXAccess;
     metaTXAccessStore(): IStoreMetaTXAccess;
-    metaTXAccessPaymentProcessor(): IPaymentProcessorMetaTXAccess;
+    metaTXAcessProfitEscrow(): IProfitEscrowMetaTXAccess;
 }
 export declare class AdminFacade extends ReadonlyFacade<ethers.Signer, AdapterComponent<ethers.Signer>> implements IAdminFacade {
     adminAccessPriceTable(): IPriceTableAdminAccess;
@@ -73,6 +81,8 @@ export declare class ServiceFacade extends AdminFacade implements IServiceFacade
     serviceAccessPriceTable(): IPriceTableServiceAccess;
     serviceAccessSellerRegistry(): ISellerRegistryServiceAccess;
     serviceAccessItemRegistry(): ServiceAdapterItemRegistry;
+    serviceAccessSellerProxy(): ISellerProxyServiceAccess;
+    serviceAccessPurchaseProxy(): IPurchaseProxyServiceAccess;
 }
 export declare function createWeb2UserFacade(chainConfig: ChainConfig, ludexConfig: LudexConfig, provider?: ethers.JsonRpcProvider): Web2UserFacade;
 export declare function createWeb3UserFacade(chainConfig: ChainConfig, ludexConfig: LudexConfig, signer: ethers.Signer): Web3UserFacade;

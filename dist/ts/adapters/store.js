@@ -23,7 +23,7 @@ class MetaTXAdapterStore extends adapter_1.Adapter {
         }
         super(address_1.Address.create(config.storeAddress), ludex_contracts_1.LudexContract.ABI.Store, component);
     }
-    purchaseItemRequest(itemID, token, deadline) {
+    permissionSignature(token, deadline) {
         return __awaiter(this, void 0, void 0, function* () {
             let tokenAddress = token.stringValue;
             let tokenContract = new ethers_1.ethers.Contract(tokenAddress, ludex_contracts_1.LudexContract.ABI.ERC20Permit, this.component.runner);
@@ -48,9 +48,18 @@ class MetaTXAdapterStore extends adapter_1.Adapter {
                 deadline: BigInt(Math.floor(Date.now() / 1000)) + deadline
             };
             let signature = yield this.component.runner.signTypedData(domain, types, value);
-            let { v, r, s } = ethers_1.ethers.Signature.from(signature);
+            return [value.deadline, ethers_1.ethers.Signature.from(signature)];
+        });
+    }
+    purchaseItemRequest(itemID, token, deadline) {
+        return __awaiter(this, void 0, void 0, function* () {
             let onResponseFunction = (itemID, buyer, tokenID) => tokenID;
-            return yield (this.component.createForwarderRequest(this.contractAddress, this.contract.interface, "purchaseItem", [itemID, token.stringValue, value.deadline, v, r, s], deadline, "ItemPurchased", onResponseFunction));
+            if (yield this.contract.isTokenPermitted(token.stringValue)) {
+                return yield (this.component.createForwarderRequest(this.contractAddress, this.contract.interface, "purchaseItem", [itemID, token.stringValue], deadline, "ItemPurchased", onResponseFunction));
+            }
+            let [purchaseDeadline, signature] = yield this.permissionSignature(token, deadline);
+            let { v, r, s } = signature;
+            return yield (this.component.createForwarderRequest(this.contractAddress, this.contract.interface, "purchaseItem", [itemID, token.stringValue, purchaseDeadline, v, r, s], deadline, "ItemPurchased", onResponseFunction));
         });
     }
 }

@@ -111,9 +111,10 @@ export abstract class Adapter<
    }
 
    protected async callAndParseLog<V>(
-   tx: ethers.TransactionResponse,
-   eventName: string,
-   onEmit: (...args: any[]) => V
+      tx: ethers.TransactionResponse,
+      eventName: string,
+      onEmit: (...args: any[]) => V,
+      filteringContract?: ethers.Contract
    ): Promise<V> 
    {
       const receipt = await Promise.race([
@@ -129,7 +130,9 @@ export abstract class Adapter<
          throw new EthereumError("Transaction failed");
       }
 
-      const logs = await this.contract.queryFilter(
+      const contract = filteringContract ?? this.contract;
+
+      const logs = await contract.queryFilter(
          this.contract.filters[eventName]?.(),
          receipt.blockNumber,
          receipt.blockNumber

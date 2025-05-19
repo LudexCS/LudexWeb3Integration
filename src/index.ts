@@ -66,8 +66,16 @@ import {
     ISellerRegistryServiceAccess
 } from "./ts/adapters/seller-registry";
 import {
-    IPaymentProcessorMetaTXAccess
-} from "./ts/adapters/payment-processor";
+    IProfitEscrowReadonlyAccess,
+    IProfitEscrowMetaTXAccess
+} from "./ts/adapters/profit-escrow";
+import {
+    ISellerProxyServiceAccess
+} from "./ts/adapters/seller-proxy";
+import {
+    IPurchaseProxyReadonlyAccess,
+    IPurchaseProxyServiceAccess
+} from "./ts/adapters/purchase-proxy";
 
 export namespace Access {
     export namespace Readonly {
@@ -75,6 +83,8 @@ export namespace Access {
         export type IPriceTable = IPriceTableReadOnlyAccess;
         export type ISellerRegistry = ISellerRegistryReadonlyAccess;
         export type IItemRegistry = IItemRegistryReadonlyAccess;
+        export type IProfitEscrow = IProfitEscrowReadonlyAccess;
+        export type IPurchaseProxy = IPurchaseProxyReadonlyAccess;
     }
 
     export namespace MetaTX {
@@ -83,6 +93,7 @@ export namespace Access {
         export type IPriceTable = IPriceTableMetaTXAccess;
         export type ISellerRegistry = ISellerRegistryMetaTXAccess;
         export type IItemRegistry = IItemRegistryMetaTXAccess;
+        export type IProfitEscrow = IProfitEscrowMetaTXAccess;
     }
 
     export namespace Admin {
@@ -97,6 +108,8 @@ export namespace Access {
         export type IPriceTable = IPriceTableServiceAccess;
         export type ISellerRegistry = ISellerRegistryServiceAccess;
         export type IItemRegistry = IItemRegistryServiceAccess;
+        export type ISellerProxy = ISellerProxyServiceAccess;
+        export type IPurchaseProxy = IPurchaseProxyServiceAccess;
     }
 };
 
