@@ -133,7 +133,7 @@ export abstract class Adapter<
       const contract = filteringContract ?? this.contract;
 
       const logs = await contract.queryFilter(
-         this.contract.filters[eventName]?.(),
+         contract.filters[eventName]?.(),
          receipt.blockNumber,
          receipt.blockNumber
       );
