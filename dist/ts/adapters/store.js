@@ -59,7 +59,7 @@ class MetaTXAdapterStore extends adapter_1.Adapter {
             }
             let [purchaseDeadline, signature] = yield this.permissionSignature(token, deadline);
             let { v, r, s } = signature;
-            return yield (this.component.createForwarderRequest(this.contractAddress, this.contract.interface, "purchaseItem", [itemID, token.stringValue, purchaseDeadline, v, r, s], deadline, "ItemPurchased", onResponseFunction));
+            return yield (this.component.createForwarderRequest(this.contractAddress, this.contract.interface, "purchaseItemWithPermission", [itemID, token.stringValue, purchaseDeadline, v, r, s], deadline, "ItemPurchased", onResponseFunction));
         });
     }
 }

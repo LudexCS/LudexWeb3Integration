@@ -102,7 +102,7 @@ export class MetaTXAdapterStore
          this.component.createForwarderRequest(
             this.contractAddress,
             this.contract.interface,
-            "purchaseItem", [itemID, token.stringValue, purchaseDeadline, v, r, s],
+            "purchaseItemWithPermission", [itemID, token.stringValue, purchaseDeadline, v, r, s],
             deadline,
             "ItemPurchased",
             onResponseFunction));
