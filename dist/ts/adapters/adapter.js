@@ -83,7 +83,7 @@ class Adapter {
             if (!log) {
                 throw new error_1.EthereumError(`'${eventName}' not found in transaction logs`);
             }
-            const decodedArgs = this.contract.interface.decodeEventLog(eventName, log.data, log.topics);
+            const decodedArgs = contract.interface.decodeEventLog(eventName, log.data, log.topics);
             return onEmit(...decodedArgs);
         });
     }

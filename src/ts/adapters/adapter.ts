@@ -143,7 +143,7 @@ export abstract class Adapter<
          throw new EthereumError(`'${eventName}' not found in transaction logs`);
       }
 
-      const decodedArgs = this.contract.interface.decodeEventLog(
+      const decodedArgs = contract.interface.decodeEventLog(
          eventName,
          log.data,
          log.topics
