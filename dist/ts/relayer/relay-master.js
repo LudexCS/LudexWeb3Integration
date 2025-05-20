@@ -121,6 +121,15 @@ function createLudexRelayMaster(ludexConfig, signer) {
     if (ludexConfig.storeAddress) {
         slaves.push(new relay_slave_1.RelaySlave(address_1.Address.create(ludexConfig.storeAddress), ludex_contracts_1.LudexContract.ABI.Store, signer));
     }
+    if (ludexConfig.profitEscrowAddress) {
+        slaves.push(new relay_slave_1.RelaySlave(address_1.Address.create(ludexConfig.profitEscrowAddress), ludex_contracts_1.LudexContract.ABI.ProfitEscrow, signer));
+    }
+    if (ludexConfig.sellerProxyAddress) {
+        slaves.push(new relay_slave_1.RelaySlave(address_1.Address.create(ludexConfig.sellerProxyAddress), ludex_contracts_1.LudexContract.ABI.SellerProxy, signer));
+    }
+    if (ludexConfig.purchaseProxyAddress) {
+        slaves.push(new relay_slave_1.RelaySlave(address_1.Address.create(ludexConfig.purchaseProxyAddress), ludex_contracts_1.LudexContract.ABI.PurchaseProxy, signer));
+    }
     if (slaves.length == 0)
         throw new error_1.Web3Error("No RelaySlave generated from LudexConfig");
     return new RelayMaster(address_1.Address.create(ludexConfig.forwarderAddress), slaves, signer);

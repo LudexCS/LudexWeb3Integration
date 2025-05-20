@@ -194,6 +194,27 @@ export function createLudexRelayMaster(
             LudexContract.ABI.Store,
             signer));
     }
+    if (ludexConfig.profitEscrowAddress)
+    {
+        slaves.push(new RelaySlave(
+            Address.create(ludexConfig.profitEscrowAddress),
+            LudexContract.ABI.ProfitEscrow,
+            signer));
+    }
+    if (ludexConfig.sellerProxyAddress)
+    {
+        slaves.push(new RelaySlave(
+            Address.create(ludexConfig.sellerProxyAddress),
+            LudexContract.ABI.SellerProxy,
+            signer));
+    }
+    if (ludexConfig.purchaseProxyAddress)
+    {
+        slaves.push(new RelaySlave(
+            Address.create(ludexConfig.purchaseProxyAddress),
+            LudexContract.ABI.PurchaseProxy,
+            signer));
+    }
 
     if (slaves.length == 0)
         throw new Web3Error(
