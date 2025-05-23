@@ -39,7 +39,7 @@ export interface ISellerProxyServiceAccess
         sellerID: bigint,
         itemID: bigint,
         discountPrice: bigint,
-        endTime: bigint
+        endTime: Date
     ): Promise<void>;
 
     changeRevShare(
@@ -52,7 +52,7 @@ export interface ISellerProxyServiceAccess
         sellerID: bigint,
         itemID: bigint,
         reducedShare: number,
-        endTime: bigint
+        endTime: Date
     ): Promise<void>;
 }
 
@@ -232,15 +232,16 @@ export class ServiceAdapterSellerProxy
         sellerID: bigint, 
         itemID: bigint, 
         discountPrice: bigint, 
-        endTime: bigint
+        endTime: Date
     ): Promise<void> 
     {
+
         return await this.callAndParseLog(
             await this.contract.startDiscount(
                 sellerID,
                 itemID,
                 discountPrice,
-                endTime),
+                BigInt(endTime.getTime() / 1000)),
             "DiscountStarted",
             (_) => {},
             this.priceTable);
@@ -266,7 +267,7 @@ export class ServiceAdapterSellerProxy
         sellerID: bigint, 
         itemID: bigint, 
         reducedShare: number, 
-        endTime: bigint
+        endTime: Date
     ): Promise<void> 
     {
         return await this.callAndParseLog(
@@ -274,7 +275,7 @@ export class ServiceAdapterSellerProxy
                 sellerID,
                 itemID,
                 reducedShare,
-                endTime),
+                BigInt(endTime.getTime() / 1000)),
             "RevShareReductionStarted",
             (_) => {},
             this.priceTable);

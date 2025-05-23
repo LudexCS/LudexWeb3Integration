@@ -78,7 +78,7 @@ class ServiceAdapterSellerProxy extends adapter_1.Adapter {
     }
     startDiscount(sellerID, itemID, discountPrice, endTime) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.callAndParseLog(yield this.contract.startDiscount(sellerID, itemID, discountPrice, endTime), "DiscountStarted", (_) => { }, this.priceTable);
+            return yield this.callAndParseLog(yield this.contract.startDiscount(sellerID, itemID, discountPrice, BigInt(endTime.getTime() / 1000)), "DiscountStarted", (_) => { }, this.priceTable);
         });
     }
     changeRevShare(sellerID, itemID, newSharePermyriad) {
@@ -88,7 +88,7 @@ class ServiceAdapterSellerProxy extends adapter_1.Adapter {
     }
     startRevShareReductionEvent(sellerID, itemID, reducedShare, endTime) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.callAndParseLog(yield this.contract.startRevShareReductionEvent(sellerID, itemID, reducedShare, endTime), "RevShareReductionStarted", (_) => { }, this.priceTable);
+            return yield this.callAndParseLog(yield this.contract.startRevShareReductionEvent(sellerID, itemID, reducedShare, BigInt(endTime.getTime() / 1000)), "RevShareReductionStarted", (_) => { }, this.priceTable);
         });
     }
 }

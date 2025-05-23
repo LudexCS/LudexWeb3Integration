@@ -7,9 +7,9 @@ export interface ISellerProxyServiceAccess {
     claimProfit(sellerID: bigint, itemID: bigint, token: Address, recipient: Address): Promise<bigint>;
     claimSellerRight(sellerID: bigint, items: bigint[], seller: Address): Promise<[Address, bigint[]]>;
     changeItemPrice(sellerID: bigint, itemID: bigint, newUsdPrice: bigint): Promise<bigint>;
-    startDiscount(sellerID: bigint, itemID: bigint, discountPrice: bigint, endTime: bigint): Promise<void>;
+    startDiscount(sellerID: bigint, itemID: bigint, discountPrice: bigint, endTime: Date): Promise<void>;
     changeRevShare(sellerID: bigint, itemID: bigint, newSharePermyriad: number): Promise<number>;
-    startRevShareReductionEvent(sellerID: bigint, itemID: bigint, reducedShare: number, endTime: bigint): Promise<void>;
+    startRevShareReductionEvent(sellerID: bigint, itemID: bigint, reducedShare: number, endTime: Date): Promise<void>;
 }
 export declare class ServiceAdapterSellerProxy extends Adapter<ethers.Signer, AdminAdapterComponent> implements ISellerProxyServiceAccess {
     private itemRegistry;
@@ -20,8 +20,8 @@ export declare class ServiceAdapterSellerProxy extends Adapter<ethers.Signer, Ad
     claimProfit(sellerID: bigint, itemID: bigint, token: Address, recipient: Address): Promise<bigint>;
     claimSellerRight(sellerID: bigint, items: bigint[], seller: Address): Promise<[Address, bigint[]]>;
     changeItemPrice(sellerID: bigint, itemID: bigint, newUsdPrice: bigint): Promise<bigint>;
-    startDiscount(sellerID: bigint, itemID: bigint, discountPrice: bigint, endTime: bigint): Promise<void>;
+    startDiscount(sellerID: bigint, itemID: bigint, discountPrice: bigint, endTime: Date): Promise<void>;
     changeRevShare(sellerID: bigint, itemID: bigint, newSharePermyriad: number): Promise<number>;
-    startRevShareReductionEvent(sellerID: bigint, itemID: bigint, reducedShare: number, endTime: bigint): Promise<void>;
+    startRevShareReductionEvent(sellerID: bigint, itemID: bigint, reducedShare: number, endTime: Date): Promise<void>;
 }
 //# sourceMappingURL=seller-proxy.d.ts.map
