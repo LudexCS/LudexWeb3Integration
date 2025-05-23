@@ -26,11 +26,16 @@ class ServiceAdapterSellerProxy extends adapter_1.Adapter {
         if (!config.profitEscrowAddress) {
             throw new error_1.Web3Error("Address of ProfitEscrow not configured");
         }
+        if (!config.priceTableAddress) {
+            throw new error_1.Web3Error("Address of PriceTable not configured");
+        }
         super(address_1.Address.create(config.sellerProxyAddress), ludex_contracts_1.LudexContract.ABI.SellerProxy, component);
         this.itemRegistry =
             new ethers_1.ethers.Contract(config.itemRegistryAddress, ludex_contracts_1.LudexContract.ABI.ItemRegistry, component.runner);
         this.profitEscrow =
             new ethers_1.ethers.Contract(config.profitEscrowAddress, ludex_contracts_1.LudexContract.ABI.ProfitEscrow, component.runner);
+        this.priceTable =
+            new ethers_1.ethers.Contract(config.priceTableAddress, ludex_contracts_1.LudexContract.ABI.PriceTable, component.runner);
     }
     registerItem(nameHash, sellerID, parents, usdPrice, shares) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -62,6 +67,28 @@ class ServiceAdapterSellerProxy extends adapter_1.Adapter {
                 return [address_1.Address.create(seller), items];
             }
             return yield this.callAndParseLog(yield this.contract.claimSellerRight(sellerID, items, seller.stringValue), "SellerRightClaimed", onSellerRightClaimed);
+        });
+    }
+    changeItemPrice(sellerID, itemID, newUsdPrice) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.callAndParseLog(yield this.contract.changeItemPrice(sellerID, itemID, newUsdPrice), "ItemPriceChanged", (itemID, newUsdPrice, prevUsdPrice) => {
+                return prevUsdPrice;
+            }, this.priceTable);
+        });
+    }
+    startDiscount(sellerID, itemID, discountPrice, endTime) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.callAndParseLog(yield this.contract.startDiscount(sellerID, itemID, discountPrice, endTime), "DiscountStarted", (_) => { }, this.priceTable);
+        });
+    }
+    changeRevShare(sellerID, itemID, newSharePermyriad) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.callAndParseLog(yield this.contract.changeRevShare(sellerID, itemID, newSharePermyriad), "RevShareChanged", (itemID, newShare, prevShare) => prevShare, this.priceTable);
+        });
+    }
+    startRevShareReductionEvent(sellerID, itemID, reducedShare, endTime) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.callAndParseLog(yield this.contract.startRevShareReductionEvent(sellerID, itemID, reducedShare, endTime), "RevShareReductionStarted", (_) => { }, this.priceTable);
         });
     }
 }

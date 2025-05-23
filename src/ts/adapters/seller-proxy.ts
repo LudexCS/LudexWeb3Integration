@@ -18,7 +18,7 @@ export interface ISellerProxyServiceAccess
 
     claimProfit(
         sellerID: bigint,
-        items: bigint,
+        itemID: bigint,
         token: Address,
         recipient: Address
     ): Promise<bigint>;
@@ -28,6 +28,32 @@ export interface ISellerProxyServiceAccess
         items: bigint[],
         seller: Address
     ): Promise<[Address, bigint[]]>;
+
+    changeItemPrice(
+        sellerID: bigint,
+        itemID: bigint,
+        newUsdPrice: bigint
+    ): Promise<bigint>;
+
+    startDiscount(
+        sellerID: bigint,
+        itemID: bigint,
+        discountPrice: bigint,
+        endTime: bigint
+    ): Promise<void>;
+
+    changeRevShare(
+        sellerID: bigint,
+        itemID: bigint,
+        newSharePermyriad: number
+    ): Promise<number>;
+
+    startRevShareReductionEvent(
+        sellerID: bigint,
+        itemID: bigint,
+        reducedShare: number,
+        endTime: bigint
+    ): Promise<void>;
 }
 
 export class ServiceAdapterSellerProxy
@@ -36,6 +62,7 @@ export class ServiceAdapterSellerProxy
 {
     private itemRegistry: ethers.Contract;
     private profitEscrow: ethers.Contract;
+    private priceTable: ethers.Contract;
 
     public constructor(
         config: LudexConfig, 
@@ -59,6 +86,12 @@ export class ServiceAdapterSellerProxy
                 "Address of ProfitEscrow not configured");
         }
 
+        if (!config.priceTableAddress)
+        {
+            throw new Web3Error(
+                "Address of PriceTable not configured");
+        }
+
         super(
             Address.create(config.sellerProxyAddress),
             LudexContract.ABI.SellerProxy,
@@ -74,6 +107,12 @@ export class ServiceAdapterSellerProxy
             new ethers.Contract(
                 config.profitEscrowAddress,
                 LudexContract.ABI.ProfitEscrow,
+                component.runner);
+
+        this.priceTable =
+            new ethers.Contract(
+                config.priceTableAddress,
+                LudexContract.ABI.PriceTable,
                 component.runner);
     }
     
@@ -169,5 +208,75 @@ export class ServiceAdapterSellerProxy
                 seller.stringValue),
             "SellerRightClaimed",
             onSellerRightClaimed)
+    }
+
+    public async changeItemPrice(
+        sellerID: bigint, 
+        itemID: bigint, 
+        newUsdPrice: bigint
+    ): Promise<bigint> 
+    {
+        return await this.callAndParseLog(
+            await this.contract.changeItemPrice(
+                sellerID,
+                itemID,
+                newUsdPrice),
+            "ItemPriceChanged",
+            (itemID: bigint, newUsdPrice: bigint, prevUsdPrice: bigint) => {
+                return prevUsdPrice
+            },
+            this.priceTable);
+    }
+
+    public async startDiscount(
+        sellerID: bigint, 
+        itemID: bigint, 
+        discountPrice: bigint, 
+        endTime: bigint
+    ): Promise<void> 
+    {
+        return await this.callAndParseLog(
+            await this.contract.startDiscount(
+                sellerID,
+                itemID,
+                discountPrice,
+                endTime),
+            "DiscountStarted",
+            (_) => {},
+            this.priceTable);
+    }
+
+    public async changeRevShare(
+        sellerID: bigint, 
+        itemID: bigint, 
+        newSharePermyriad: number
+    ): Promise<number> 
+    {
+        return await this.callAndParseLog(
+            await this.contract.changeRevShare(
+                sellerID,
+                itemID,
+                newSharePermyriad),
+            "RevShareChanged",
+            (itemID: bigint, newShare: number, prevShare: number) => prevShare,
+            this.priceTable);
+    }
+
+    public async startRevShareReductionEvent(
+        sellerID: bigint, 
+        itemID: bigint, 
+        reducedShare: number, 
+        endTime: bigint
+    ): Promise<void> 
+    {
+        return await this.callAndParseLog(
+            await this.contract.startRevShareReductionEvent(
+                sellerID,
+                itemID,
+                reducedShare,
+                endTime),
+            "RevShareReductionStarted",
+            (_) => {},
+            this.priceTable);
     }
 }
