@@ -44,6 +44,11 @@ class ReadonlyAdapterPriceTable extends adapter_1.Adapter {
             return yield this.contract.usdToToken(token.stringValue);
         });
     }
+    getRevShare(itemID) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.contract.getRevShare(itemID);
+        });
+    }
 }
 exports.ReadonlyAdapterPriceTable = ReadonlyAdapterPriceTable;
 class MetaTXAdapterPriceTable extends ReadonlyAdapterPriceTable {
@@ -59,6 +64,18 @@ class MetaTXAdapterPriceTable extends ReadonlyAdapterPriceTable {
     startDiscountRequest(itemID, usdPrice, endTime, deadline) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield (this.component.createForwarderRequest(this.contractAddress, this.contract.interface, "startDiscount", [itemID, usdPrice, BigInt(endTime.getTime() / 1000)], deadline, "DiscountStarted", (_) => { }));
+        });
+    }
+    changeRevShareRequest(itemID, newShare, deadline) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield (this.component.createForwarderRequest(this.contractAddress, this.contract.interface, "changeRevShare", [itemID, newShare], deadline, "RevShareChanged", (itemID, newShare, prevShare) => {
+                return prevShare;
+            }));
+        });
+    }
+    startRevShareReductionEventRequest(itemID, reducedShare, endTime, deadline) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield (this.component.createForwarderRequest(this.contractAddress, this.contract.interface, "startRevShareReductionEventRequest", [itemID, reducedShare, BigInt(endTime.getTime() / 1000)], deadline, "RevShareReductionStarted", (_) => { }));
         });
     }
 }

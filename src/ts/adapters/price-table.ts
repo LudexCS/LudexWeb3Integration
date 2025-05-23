@@ -17,6 +17,9 @@ export interface IPriceTableReadOnlyAccess
 
     getExchangeRateOf(token: Address)
     : Promise<bigint>;
+
+    getRevShare(itemID: bigint)
+    : Promise<number>;
 }
 
 export interface IPriceTableMetaTXAccess extends IPriceTableReadOnlyAccess
@@ -29,6 +32,16 @@ export interface IPriceTableMetaTXAccess extends IPriceTableReadOnlyAccess
     
     startDiscountRequest(itemID: bigint, usdPrice: bigint, endTime: Date, deadline: bigint)
     : Promise<RelayRequest<void>>;
+
+    changeRevShareRequest(itemID: bigint, newShare: number, deadline: bigint)
+    : Promise<RelayRequest<number>>;
+
+    startRevShareReductionEventRequest(
+        itemID: bigint, 
+        reducedShare: number, 
+        endTime: Date,
+        deadline: bigint
+    ): Promise<RelayRequest<void>>;
 }
 
 export interface IPriceTableAdminAccess extends IPriceTableReadOnlyAccess
@@ -92,6 +105,10 @@ export class ReadonlyAdapterPriceTable<
         return await this.contract.usdToToken(token.stringValue);
     }
 
+    public async getRevShare(itemID: bigint): Promise<number> 
+    {
+        return await this.contract.getRevShare(itemID);
+    }
 }
 
 export type BaseAdapterPriceTable = 
@@ -147,6 +164,44 @@ export class MetaTXAdapterPriceTable
                 deadline,
                 "DiscountStarted",
                 (_) => {}));
+    }
+
+    public async changeRevShareRequest(
+        itemID: bigint, 
+        newShare: number,
+        deadline: bigint
+    ): Promise<RelayRequest<number>> 
+    {
+        return await (
+            this.component.createForwarderRequest(
+                this.contractAddress,
+                this.contract.interface,
+                "changeRevShare", [itemID, newShare],
+                deadline,
+                "RevShareChanged",
+                (itemID: bigint, newShare: number, prevShare: number) => {
+                    return prevShare;
+                }));
+    }
+
+    public async startRevShareReductionEventRequest(
+        itemID: bigint, 
+        reducedShare: number, 
+        endTime: Date, 
+        deadline: bigint
+    ): Promise<RelayRequest<void>> 
+    {
+        return await (
+            this.component.createForwarderRequest(
+                this.contractAddress,
+                this.contract.interface,
+                "startRevShareReductionEventRequest", 
+                [itemID, reducedShare, BigInt(endTime.getTime() / 1000)],
+                deadline,
+                "RevShareReductionStarted",
+                (_) => {}
+            )
+        )    
     }
 }
 
