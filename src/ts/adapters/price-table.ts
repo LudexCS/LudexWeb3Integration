@@ -195,7 +195,7 @@ export class MetaTXAdapterPriceTable
             this.component.createForwarderRequest(
                 this.contractAddress,
                 this.contract.interface,
-                "startRevShareReductionEventRequest", 
+                "startRevShareReductionEvent", 
                 [itemID, reducedShare, BigInt(endTime.getTime() / 1000)],
                 deadline,
                 "RevShareReductionStarted",

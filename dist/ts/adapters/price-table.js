@@ -75,7 +75,7 @@ class MetaTXAdapterPriceTable extends ReadonlyAdapterPriceTable {
     }
     startRevShareReductionEventRequest(itemID, reducedShare, endTime, deadline) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield (this.component.createForwarderRequest(this.contractAddress, this.contract.interface, "startRevShareReductionEventRequest", [itemID, reducedShare, BigInt(endTime.getTime() / 1000)], deadline, "RevShareReductionStarted", (_) => { }));
+            return yield (this.component.createForwarderRequest(this.contractAddress, this.contract.interface, "startRevShareReductionEvent", [itemID, reducedShare, BigInt(endTime.getTime() / 1000)], deadline, "RevShareReductionStarted", (_) => { }));
         });
     }
 }
