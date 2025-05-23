@@ -44,9 +44,9 @@ class ReadonlyAdapterPriceTable extends adapter_1.Adapter {
             return yield this.contract.usdToToken(token.stringValue);
         });
     }
-    getRevShare(itemID) {
+    getRevShare(sharerID, itemID) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.contract.getRevShare(itemID);
+            return yield this.contract.getRevShare(sharerID, itemID);
         });
     }
 }

@@ -18,7 +18,7 @@ export interface IPriceTableReadOnlyAccess
     getExchangeRateOf(token: Address)
     : Promise<bigint>;
 
-    getRevShare(itemID: bigint)
+    getRevShare(sharerID: bigint, itemID: bigint)
     : Promise<number>;
 }
 
@@ -105,9 +105,9 @@ export class ReadonlyAdapterPriceTable<
         return await this.contract.usdToToken(token.stringValue);
     }
 
-    public async getRevShare(itemID: bigint): Promise<number> 
+    public async getRevShare(sharerID: bigint, itemID: bigint): Promise<number> 
     {
-        return await this.contract.getRevShare(itemID);
+        return await this.contract.getRevShare(sharerID, itemID);
     }
 }
 

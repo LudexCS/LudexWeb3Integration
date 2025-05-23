@@ -8,7 +8,7 @@ export interface IPriceTableReadOnlyAccess {
     getPriceUsd(itemID: bigint): Promise<bigint>;
     getPriceInfoList(itemID: bigint): Promise<PriceInfo[]>;
     getExchangeRateOf(token: Address): Promise<bigint>;
-    getRevShare(itemID: bigint): Promise<number>;
+    getRevShare(sharerID: bigint, itemID: bigint): Promise<number>;
 }
 export interface IPriceTableMetaTXAccess extends IPriceTableReadOnlyAccess {
     changeItemPriceRequest(itemID: bigint, priceUsd: bigint, deadline: bigint): Promise<RelayRequest<bigint>>;
@@ -28,7 +28,7 @@ export declare class ReadonlyAdapterPriceTable<T extends ethers.ContractRunner, 
     getPriceUsd(itemID: bigint): Promise<bigint>;
     getPriceInfoList(itemID: bigint): Promise<PriceInfo[]>;
     getExchangeRateOf(token: Address): Promise<bigint>;
-    getRevShare(itemID: bigint): Promise<number>;
+    getRevShare(sharerID: bigint, itemID: bigint): Promise<number>;
 }
 export type BaseAdapterPriceTable = ReadonlyAdapterPriceTable<ethers.JsonRpcProvider, AdapterComponent<ethers.JsonRpcProvider>>;
 export declare class MetaTXAdapterPriceTable extends ReadonlyAdapterPriceTable<ethers.Signer, MetaTXAdapterComponent> implements IPriceTableMetaTXAccess {
