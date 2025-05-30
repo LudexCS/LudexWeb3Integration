@@ -10,7 +10,7 @@ import { IStoreMetaTXAccess, MetaTXAdapterStore } from "./adapters/store";
 import { Web3Error } from "./error";
 import { Address } from "./address";
 import { LudexContract} from "ludex-contracts";
-import { IProfitEscrowMetaTXAccess, IProfitEscrowReadonlyAccess, MetaTXAdapterProfitEscrow, ReadonlyAdapterProfitEscrow } from "./adapters/profit-escrow";
+import { IProfitEscrowMetaTXAccess, IProfitEscrowReadonlyAccess, IProfitEscrowServiceAccess, MetaTXAdapterProfitEscrow, ReadonlyAdapterProfitEscrow, ServiceAdapterProfitEscrow } from "./adapters/profit-escrow";
 import { IPurchaseProxyReadonlyAccess, IPurchaseProxyServiceAccess, ReadonlyAdapterPurchaseProxy, ServiceAdapterPurchaseProxy } from "./adapters/purchase-proxy";
 import { ISellerProxyServiceAccess, ServiceAdapterSellerProxy } from "./adapters/seller-proxy";
 
@@ -48,6 +48,7 @@ export interface IServiceFacade extends IAdminFacade
     serviceAccessLedger(): ILedgerServiceAccess;
     serviceAccessSellerRegistry(): ISellerRegistryServiceAccess;
     serviceAccessItemRegistry(): IItemRegistryServiceAccess;
+    serviceAccessProfitEscrow(): IProfitEscrowServiceAccess;
     serviceAccessSellerProxy(): ISellerProxyServiceAccess;
     serviceAccessPurchaseProxy(): IPurchaseProxyServiceAccess;
 }
@@ -237,6 +238,11 @@ export class ServiceFacade
     public serviceAccessPurchaseProxy(): IPurchaseProxyServiceAccess 
     {return (
         new ServiceAdapterPurchaseProxy(this.ludexConfig, this.component));
+    }
+
+    public serviceAccessProfitEscrow(): IProfitEscrowServiceAccess 
+    {return (
+        new ServiceAdapterProfitEscrow(this.ludexConfig, this.component));
     }
 }
 

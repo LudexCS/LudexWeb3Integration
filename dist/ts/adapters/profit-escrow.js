@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MetaTXAdapterProfitEscrow = exports.ReadonlyAdapterProfitEscrow = void 0;
+exports.ServiceAdapterProfitEscrow = exports.MetaTXAdapterProfitEscrow = exports.ReadonlyAdapterProfitEscrow = void 0;
 const adapter_1 = require("./adapter");
 const ludex_contracts_1 = require("ludex-contracts");
 const address_1 = require("../address");
@@ -26,6 +26,11 @@ class ReadonlyAdapterProfitEscrow extends adapter_1.Adapter {
             return yield this.contract.getBalanceFor(itemID, token.stringValue);
         });
     }
+    getPendingProfit(itemID, token) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.contract.getPendingProfit(itemID, token.stringValue);
+        });
+    }
 }
 exports.ReadonlyAdapterProfitEscrow = ReadonlyAdapterProfitEscrow;
 class MetaTXAdapterProfitEscrow extends ReadonlyAdapterProfitEscrow {
@@ -39,4 +44,17 @@ class MetaTXAdapterProfitEscrow extends ReadonlyAdapterProfitEscrow {
     }
 }
 exports.MetaTXAdapterProfitEscrow = MetaTXAdapterProfitEscrow;
+class ServiceAdapterProfitEscrow extends ReadonlyAdapterProfitEscrow {
+    getWholePendingProfit(token) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.contract.getWholePendingProfit(token.stringValue);
+        });
+    }
+    settlePendingProfit(token, itemIDs) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.callAndParseLog(yield this.contract.settlePendingProfit(token.stringValue, itemIDs), "ProfitSettled", (_) => { });
+        });
+    }
+}
+exports.ServiceAdapterProfitEscrow = ServiceAdapterProfitEscrow;
 //# sourceMappingURL=profit-escrow.js.map

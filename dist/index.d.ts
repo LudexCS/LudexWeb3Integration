@@ -21,7 +21,7 @@ import { ILedgerReadonlyAccess, ILedgerMetaTXAccess, ILedgerAdminAccess, ILedger
 import { IPriceTableReadOnlyAccess, IPriceTableMetaTXAccess, IPriceTableAdminAccess, IPriceTableServiceAccess } from "./ts/adapters/price-table";
 import { IItemRegistryReadonlyAccess, IItemRegistryMetaTXAccess, IItemRegistryAdminAccess, IItemRegistryServiceAccess } from "./ts/adapters/item-registry";
 import { ISellerRegistryReadonlyAccess, ISellerRegistryMetaTXAccess, ISellerRegistryAdminAccess, ISellerRegistryServiceAccess } from "./ts/adapters/seller-registry";
-import { IProfitEscrowReadonlyAccess, IProfitEscrowMetaTXAccess } from "./ts/adapters/profit-escrow";
+import { IProfitEscrowReadonlyAccess, IProfitEscrowMetaTXAccess, IProfitEscrowServiceAccess } from "./ts/adapters/profit-escrow";
 import { ISellerProxyServiceAccess } from "./ts/adapters/seller-proxy";
 import { IPurchaseProxyReadonlyAccess, IPurchaseProxyServiceAccess } from "./ts/adapters/purchase-proxy";
 export declare namespace Access {
@@ -52,6 +52,7 @@ export declare namespace Access {
         type IPriceTable = IPriceTableServiceAccess;
         type ISellerRegistry = ISellerRegistryServiceAccess;
         type IItemRegistry = IItemRegistryServiceAccess;
+        type IProfitEscrow = IProfitEscrowServiceAccess;
         type ISellerProxy = ISellerProxyServiceAccess;
         type IPurchaseProxy = IPurchaseProxyServiceAccess;
     }

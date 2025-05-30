@@ -6,7 +6,7 @@ import { ILedgerReadonlyAccess, ILedgerMetaTXAccess, ILedgerAdminAccess, ILedger
 import { ISellerRegistryReadonlyAccess, ISellerRegistryMetaTXAccess, ISellerRegistryAdminAccess, ISellerRegistryServiceAccess } from "./adapters/seller-registry";
 import { IItemRegistryReadonlyAccess, IItemRegistryMetaTXAccess, IItemRegistryAdminAccess, ServiceAdapterItemRegistry, IItemRegistryServiceAccess } from "./adapters/item-registry";
 import { IStoreMetaTXAccess } from "./adapters/store";
-import { IProfitEscrowMetaTXAccess, IProfitEscrowReadonlyAccess } from "./adapters/profit-escrow";
+import { IProfitEscrowMetaTXAccess, IProfitEscrowReadonlyAccess, IProfitEscrowServiceAccess } from "./adapters/profit-escrow";
 import { IPurchaseProxyReadonlyAccess, IPurchaseProxyServiceAccess } from "./adapters/purchase-proxy";
 import { ISellerProxyServiceAccess } from "./adapters/seller-proxy";
 export interface IReadonlyFacade {
@@ -36,6 +36,7 @@ export interface IServiceFacade extends IAdminFacade {
     serviceAccessLedger(): ILedgerServiceAccess;
     serviceAccessSellerRegistry(): ISellerRegistryServiceAccess;
     serviceAccessItemRegistry(): IItemRegistryServiceAccess;
+    serviceAccessProfitEscrow(): IProfitEscrowServiceAccess;
     serviceAccessSellerProxy(): ISellerProxyServiceAccess;
     serviceAccessPurchaseProxy(): IPurchaseProxyServiceAccess;
 }
@@ -83,6 +84,7 @@ export declare class ServiceFacade extends AdminFacade implements IServiceFacade
     serviceAccessItemRegistry(): ServiceAdapterItemRegistry;
     serviceAccessSellerProxy(): ISellerProxyServiceAccess;
     serviceAccessPurchaseProxy(): IPurchaseProxyServiceAccess;
+    serviceAccessProfitEscrow(): IProfitEscrowServiceAccess;
 }
 export declare function createWeb2UserFacade(chainConfig: ChainConfig, ludexConfig: LudexConfig, provider?: ethers.JsonRpcProvider): Web2UserFacade;
 export declare function createWeb3UserFacade(chainConfig: ChainConfig, ludexConfig: LudexConfig, signer: ethers.Signer): Web3UserFacade;

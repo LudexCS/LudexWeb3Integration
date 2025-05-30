@@ -106,6 +106,9 @@ class ServiceFacade extends AdminFacade {
     serviceAccessPurchaseProxy() {
         return (new purchase_proxy_1.ServiceAdapterPurchaseProxy(this.ludexConfig, this.component));
     }
+    serviceAccessProfitEscrow() {
+        return (new profit_escrow_1.ServiceAdapterProfitEscrow(this.ludexConfig, this.component));
+    }
 }
 exports.ServiceFacade = ServiceFacade;
 function createWeb2UserFacade(chainConfig, ludexConfig, provider) {

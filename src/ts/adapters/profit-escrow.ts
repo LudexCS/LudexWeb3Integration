@@ -11,6 +11,9 @@ export interface IProfitEscrowReadonlyAccess
 {
     getBalanceFor(itemID: bigint, token: Address)
     : Promise<bigint>;
+
+    getPendingProfit(itemID: bigint, token: Address)
+    : Promise<bigint>;
 }
 
 export interface IProfitEscrowMetaTXAccess
@@ -22,6 +25,16 @@ export interface IProfitEscrowMetaTXAccess
         recipient: Address, 
         deadline: bigint
     ): Promise<RelayRequest<bigint>>;
+}
+
+export interface IProfitEscrowServiceAccess
+    extends IProfitEscrowReadonlyAccess
+{
+    getWholePendingProfit(token: Address)
+    : Promise<bigint>;
+
+    settlePendingProfit(token: Address, itemIDs: bigint[])
+    : Promise<void>;
 }
 
 export class ReadonlyAdapterProfitEscrow <
@@ -54,6 +67,11 @@ export class ReadonlyAdapterProfitEscrow <
         return await this.contract.getBalanceFor(itemID, token.stringValue);
     }
 
+    public async getPendingProfit(itemID: bigint, token: Address)
+    : Promise<bigint> 
+    {
+        return await this.contract.getPendingProfit(itemID, token.stringValue);
+    }
 }
 
 export class MetaTXAdapterProfitEscrow
@@ -84,5 +102,27 @@ export class MetaTXAdapterProfitEscrow
                 deadline,               
                 "ProfitClaimed",
                 onResponseFunction));
+    }
+}
+
+export class ServiceAdapterProfitEscrow
+    extends ReadonlyAdapterProfitEscrow<ethers.Signer, AdminAdapterComponent>
+    implements IProfitEscrowServiceAccess
+{
+    public async getWholePendingProfit(token: Address)
+    : Promise<bigint> 
+    {
+        return await this.contract.getWholePendingProfit(token.stringValue);
+    }
+
+    public async settlePendingProfit(token: Address, itemIDs: bigint[])
+    : Promise<void> 
+    {
+        return await this.callAndParseLog(
+            await this.contract.settlePendingProfit(
+                token.stringValue, 
+                itemIDs),
+            "ProfitSettled",
+            (_) => {})
     }
 }

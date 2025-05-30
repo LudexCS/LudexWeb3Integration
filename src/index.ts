@@ -67,7 +67,8 @@ import {
 } from "./ts/adapters/seller-registry";
 import {
     IProfitEscrowReadonlyAccess,
-    IProfitEscrowMetaTXAccess
+    IProfitEscrowMetaTXAccess,
+    IProfitEscrowServiceAccess
 } from "./ts/adapters/profit-escrow";
 import {
     ISellerProxyServiceAccess
@@ -108,6 +109,7 @@ export namespace Access {
         export type IPriceTable = IPriceTableServiceAccess;
         export type ISellerRegistry = ISellerRegistryServiceAccess;
         export type IItemRegistry = IItemRegistryServiceAccess;
+        export type IProfitEscrow = IProfitEscrowServiceAccess;
         export type ISellerProxy = ISellerProxyServiceAccess;
         export type IPurchaseProxy = IPurchaseProxyServiceAccess;
     }
