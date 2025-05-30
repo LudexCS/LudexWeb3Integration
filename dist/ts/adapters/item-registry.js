@@ -66,9 +66,13 @@ class ReadonlyAdapterItemRegistry extends adapter_1.Adapter {
             return yield (this.contract.nameHash(itemName));
         });
     }
+    checkOnSale(itemID) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield (this.contract.isOnSale(itemID));
+        });
+    }
 }
 exports.ReadonlyAdapterItemRegistry = ReadonlyAdapterItemRegistry;
-;
 class AdminAdapterItemRegistry extends ReadonlyAdapterItemRegistry {
     constructor(config, component) {
         super(config, component);

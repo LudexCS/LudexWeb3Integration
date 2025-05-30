@@ -8,6 +8,7 @@ export interface IItemRegistryReadonlyAccess {
     descendentsOf(itemID: bigint, hierarchy: number): Promise<Array<bigint>>;
     timestampRegistered(itemID: bigint): Promise<Date>;
     getNameHash(itemName: string): Promise<string>;
+    checkOnSale(itemID: bigint): Promise<boolean>;
 }
 export interface IItemRegistryMetaTXAccess extends IItemRegistryReadonlyAccess {
 }
@@ -25,6 +26,7 @@ export declare class ReadonlyAdapterItemRegistry<T extends ethers.ContractRunner
     descendentsOf(itemID: bigint, hierarchy?: number): Promise<Array<bigint>>;
     timestampRegistered(itemID: bigint): Promise<Date>;
     getNameHash(itemName: string): Promise<string>;
+    checkOnSale(itemID: bigint): Promise<boolean>;
 }
 export declare class AdminAdapterItemRegistry extends ReadonlyAdapterItemRegistry<ethers.Signer, AdminAdapterComponent> implements IItemRegistryAdminAccess {
     constructor(config: LudexConfig, component: AdminAdapterComponent);

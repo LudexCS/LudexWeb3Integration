@@ -21,6 +21,9 @@ export interface IItemRegistryReadonlyAccess
 
     getNameHash(itemName: string)
     : Promise<string>;
+
+    checkOnSale(itemID: bigint)
+    : Promise<boolean>;
 }
 
 export interface IItemRegistryMetaTXAccess 
@@ -133,7 +136,13 @@ export class ReadonlyAdapterItemRegistry<
     {return await(
         this.contract.nameHash(itemName));
     }
-};
+
+    public async checkOnSale(itemID: bigint)
+    : Promise<boolean> 
+    {return await(
+        this.contract.isOnSale(itemID));
+    }
+}
 
 export class AdminAdapterItemRegistry
     extends ReadonlyAdapterItemRegistry<ethers.Signer, AdminAdapterComponent>
